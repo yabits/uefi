@@ -1,0 +1,29 @@
+################################################################################
+#
+#   Copyright (c) 2014 Minoca Corp.
+#
+#    This file is licensed under the terms of the GNU General Public License
+#    version 3. Alternative licensing terms are available. Contact
+#    info@minocacorp.com for details. See the LICENSE file at the root of this
+#    project for complete licensing information.
+#
+#   Binary Name:
+#
+#       Common UEFI device sources
+#
+#   Abstract:
+#
+#       This file includes common build arguments for all UEFI device libraries.
+#
+#   Author:
+#
+#       Evan Green 27-Feb-2014
+#
+#   Environment:
+#
+#       Firmware
+#
+################################################################################
+
+INCLUDES += $(SRCROOT)/os/uefi/include;
+

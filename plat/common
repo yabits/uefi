@@ -1,0 +1,51 @@
+################################################################################
+#
+#   Copyright (c) 2014 Minoca Corp.
+#
+#    This file is licensed under the terms of the GNU General Public License
+#    version 3. Alternative licensing terms are available. Contact
+#    info@minocacorp.com for details. See the LICENSE file at the root of this
+#    project for complete licensing information.
+#
+#   Binary Name:
+#
+#       Common UEFI platform sources
+#
+#   Abstract:
+#
+#       This file includes common build arguments for all UEFI platform targets.
+#
+#   Author:
+#
+#       Evan Green 26-Feb-2014
+#
+#   Environment:
+#
+#       Firmware
+#
+################################################################################
+
+INCLUDES += $(SRCROOT)/os/uefi/include;
+
+RTBASE = $(OBJROOT)/os/uefi/core/runtime/rtbase.ffs
+
+TARGETLIBS = $(OBJROOT)/os/kernel/kd/boot/kdboot.a           \
+             $(OBJROOT)/os/kernel/kd/kdusb/kdnousb/kdnousb.a \
+             $(OBJROOT)/os/lib/basevid/basevid.a             \
+             $(OBJROOT)/os/lib/fatlib/fat.a                  \
+             $(OBJROOT)/os/uefi/core/ueficore.a              \
+             $(OBJROOT)/os/uefi/archlib/uefiarch.a           \
+             $(OBJROOT)/os/lib/rtl/base/boot/basertlb.a      \
+
+ifeq ($(ARCH), armv7)
+
+TARGETLIBS += $(OBJROOT)/os/kernel/$(ARCH)/boot/armboot.a    \
+
+endif
+
+ifeq ($(ARCH), armv6)
+
+TARGETLIBS += $(OBJROOT)/os/kernel/$(ARCH)/boot/armboot.a    \
+
+endif
+
