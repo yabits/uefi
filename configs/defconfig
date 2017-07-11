@@ -1,0 +1,6 @@
+#
+# Automatically generated make config: don't edit
+# FILO version: 0.6.0
+# Thu Jul  7 11:47:53 2011
+#
+CONFIG_TARGET_I386=y
