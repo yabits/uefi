@@ -36,6 +36,7 @@ Environment:
 #include <minoca/uefi/protocol/blockio.h>
 #include <minoca/uefi/protocol/loadimg.h>
 #include <minoca/uefi/protocol/sfilesys.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -290,7 +291,7 @@ Return Value:
 
     EfiSetWatchdogTimer(EFI_DEFAULT_WATCHDOG_DURATION, 0, 0, NULL);
     Status = EfiStartImage(ImageHandle, ExitDataSize, ExitData);
-    RtlDebugPrint("EFI Image Returned: 0x%x\n", Status);
+    printf("EFI Image Returned: 0x%x\n", Status);
 
     //
     // Disable the watchdog timer.

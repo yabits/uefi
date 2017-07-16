@@ -33,6 +33,8 @@ Environment:
 #include <minoca/kernel/bootload.h>
 #include <minoca/kernel/x86.h>
 #include <minoca/kernel/ioport.h>
+#include <gdb.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -232,7 +234,7 @@ Return Value:
 
 {
 
-    RtlDebugPrint(" *** Divide by zero ***\n");
+    printf(" *** Divide by zero ***\n");
     KdDebugExceptionHandler(EXCEPTION_DIVIDE_BY_ZERO, NULL, TrapFrame);
     return;
 }
@@ -263,23 +265,23 @@ Return Value:
 
 {
 
-    RtlDebugPrint(" *** Page Fault: Faulting Address 0x%08x, "
+    printf(" *** Page Fault: Faulting Address 0x%08x, "
                   "Instruction 0x%08x",
                   FaultingAddress,
                   TrapFrame->Eip);
 
     if ((TrapFrame->ErrorCode & X86_FAULT_FLAG_PROTECTION_VIOLATION) != 0) {
-        RtlDebugPrint(", Protection Violation");
+        printf(", Protection Violation");
 
     } else {
-        RtlDebugPrint(",  Page Not Present");
+        printf(",  Page Not Present");
     }
 
     if ((TrapFrame->ErrorCode & X86_FAULT_ERROR_CODE_WRITE) != 0) {
-        RtlDebugPrint(", Write ***\n");
+        printf(", Write ***\n");
 
     } else {
-        RtlDebugPrint(", Read ***\n");
+        printf(", Read ***\n");
     }
 
     KdDebugExceptionHandler(EXCEPTION_ACCESS_VIOLATION, NULL, TrapFrame);

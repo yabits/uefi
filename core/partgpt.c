@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include "part.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -228,7 +229,7 @@ Return Value:
         //
 
         } else {
-            RtlDebugPrint("Warning: Primary GPT header was bad, using backup "
+            printf("Warning: Primary GPT header was bad, using backup "
                           "header.\n");
 
             EfiCopyMem(PrimaryHeader,
@@ -247,7 +248,7 @@ Return Value:
                                            BackupHeader);
 
         if (Valid == FALSE) {
-            RtlDebugPrint("Warning: Backup GPT header is invalid!\n");
+            printf("Warning: Backup GPT header is invalid!\n");
         }
     }
 
@@ -576,7 +577,7 @@ Return Value:
     Valid = FALSE;
     Status = EfiCalculateCrc32(Buffer, EntriesSize, &Crc);
     if (EFI_ERROR(Status)) {
-        RtlDebugPrint("GPT: Needed CRC and it wasn't there!\n");
+        printf("GPT: Needed CRC and it wasn't there!\n");
 
     } else if (PartitionHeader->PartitionEntryArrayCrc32 == Crc) {
         Valid = TRUE;

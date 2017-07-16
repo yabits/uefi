@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include "fwvolp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -254,7 +255,7 @@ Return Value:
                                           &(DriverEntry->ImageHandle));
 
                 if (EFI_ERROR(Status)) {
-                    RtlDebugPrint("Warning: Driver failed load with status "
+                    printf("Warning: Driver failed load with status "
                                   "0x%x.\n",
                                   Status);
 
@@ -292,7 +293,7 @@ Return Value:
                                            NULL);
 
                 if (EFI_ERROR(Status)) {
-                    RtlDebugPrint("Warning: Driver start failed with "
+                    printf("Warning: Driver start failed with "
                                   "status 0x%x.\n",
                                   Status);
                 }
@@ -616,7 +617,7 @@ Return Value:
             if (EfiCoreCompareGuids(&NameGuid, &(KnownHandle->NameGuid)) !=
                 FALSE) {
 
-                RtlDebugPrint("Found two firmware volumes with the same GUID. "
+                printf("Found two firmware volumes with the same GUID. "
                               "Skipping one!\n");
 
                 return NULL;

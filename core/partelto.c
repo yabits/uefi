@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include "part.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -149,7 +150,7 @@ Return Value:
                                   VolumeDescriptor);
 
         if (EFI_ERROR(Status)) {
-            RtlDebugPrint("ElTorito: Failed to read volume descriptor.\n");
+            printf("ElTorito: Failed to read volume descriptor.\n");
             Found = Status;
             break;
         }
@@ -187,7 +188,7 @@ Return Value:
                                   Catalog);
 
         if (EFI_ERROR(Status)) {
-            RtlDebugPrint("ElTorito: Error reading catalog at lba 0x%I64x.\n",
+            printf("ElTorito: Error reading catalog at lba 0x%I64x.\n",
                           Lba);
 
             continue;
@@ -200,7 +201,7 @@ Return Value:
         if ((Catalog->Catalog.Indicator != EFI_ELTORITO_ID_CATALOG) ||
             (Catalog->Catalog.Id55AA != 0xAA55)) {
 
-            RtlDebugPrint("ElTorito: Bad catalog.\n");
+            printf("ElTorito: Bad catalog.\n");
             continue;
         }
 
@@ -214,7 +215,7 @@ Return Value:
         }
 
         if ((Check & 0xFFFF) != 0) {
-            RtlDebugPrint("ElTorito: Catalog checksum failure.\n");
+            printf("ElTorito: Catalog checksum failure.\n");
         }
 
         MaxIndex = Media->BlockSize / sizeof(EFI_ELTORITO_CATALOG);
@@ -250,7 +251,7 @@ Return Value:
                 break;
 
             default:
-                RtlDebugPrint("ElTorito: Unsupported boot media type 0x%x.\n",
+                printf("ElTorito: Unsupported boot media type 0x%x.\n",
                               Catalog->Boot.MediaType);
 
                 break;

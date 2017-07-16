@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include <minoca/fw/smbios.h>
+#include <string.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -170,7 +171,7 @@ Return Value:
     VA_START(ArgumentList, Table);
     Argument = VA_ARG(ArgumentList, CHAR8 *);
     while (Argument != NULL) {
-        StringsLength += RtlStringLength(Argument) + 1;
+        StringsLength += strlen(Argument) + 1;
         Argument = VA_ARG(ArgumentList, CHAR8 *);
     }
 
@@ -254,7 +255,7 @@ Return Value:
     // Copy the new structure onto the end.
     //
 
-    RtlCopyMemory(EfiSmbiosEntryPoint + EfiSmbiosAllocationSize,
+    memcpy(EfiSmbiosEntryPoint + EfiSmbiosAllocationSize,
                   TableHeader,
                   TableHeader->Length);
 
@@ -266,7 +267,7 @@ Return Value:
     VA_START(ArgumentList, Table);
     Argument = VA_ARG(ArgumentList, CHAR8 *);
     while (Argument != NULL) {
-        StringLength = RtlStringLength(Argument) + 1;
+        StringLength = strlen(Argument) + 1;
         EfiCopyMem(CurrentPointer, Argument, StringLength);
         StringsLength += StringLength;
         CurrentPointer += StringLength;

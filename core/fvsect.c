@@ -32,6 +32,7 @@ Environment:
 
 #include "ueficore.h"
 #include "fwvolp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -452,7 +453,7 @@ Return Value:
             ASSERT(EFI_SECTION2_SIZE(Section) > 0x00FFFFFF);
 
             if (IsFfs3Fv == FALSE) {
-                RtlDebugPrint("Error: FFS3 section in FFS2 volume.\n");
+                printf("Error: FFS3 section in FFS2 volume.\n");
                 Status = EFI_NOT_FOUND;
                 goto FvGetSectionEnd;
             }

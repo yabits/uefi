@@ -30,6 +30,7 @@ Environment:
 //
 
 #include "ueficore.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -809,7 +810,7 @@ Return Value:
                                   &EntryAddress);
 
     if (EFI_ERROR(Status)) {
-        RtlDebugPrint("Failed to add firmware image to memory map.\n");
+        printf("Failed to add firmware image to memory map.\n");
         goto CoreInitializeMemoryServicesEnd;
     }
 
@@ -824,7 +825,7 @@ Return Value:
                                   &EntryAddress);
 
     if (EFI_ERROR(Status)) {
-        RtlDebugPrint("Failed to add firmware stack to memory map.\n");
+        printf("Failed to add firmware stack to memory map.\n");
         goto CoreInitializeMemoryServicesEnd;
     }
 
@@ -875,7 +876,7 @@ Return Value:
                 if ((Entry->Descriptor.Type == EfiACPIReclaimMemory) ||
                     (Entry->Descriptor.Type == EfiACPIMemoryNVS)) {
 
-                    RtlDebugPrint("ExitBootServices: ACPI memory entry has "
+                    printf("ExitBootServices: ACPI memory entry has "
                                   "Runtime attribute set!\n");
 
                     Status = EFI_INVALID_PARAMETER;
@@ -885,7 +886,7 @@ Return Value:
                 if ((Entry->Descriptor.PhysicalStart &
                      (EFI_ACPI_RUNTIME_PAGE_ALLOCATION_ALIGNMENT - 1)) != 0) {
 
-                    RtlDebugPrint("ExitBootServices: Runtime entry is not "
+                    printf("ExitBootServices: Runtime entry is not "
                                   "aligned.\n");
 
                     Status = EFI_INVALID_PARAMETER;
@@ -1986,7 +1987,7 @@ Return Value:
     UINTN Offset;
     UINT64 TotalPages;
 
-    RtlDebugPrint("EFI Memory map at 0x%08I64x\n", Map);
+    printf("EFI Memory map at 0x%08I64x\n", Map);
     TotalPages = 0;
     Offset = 0;
     while (Offset < MapSize) {
@@ -1997,7 +1998,7 @@ Return Value:
     }
 
     Megabytes = (TotalPages << EFI_PAGE_SHIFT) / (1024ULL * 1024ULL);
-    RtlDebugPrint("Total Pages: 0x%I64x (%I64dMB)\n\n", TotalPages, Megabytes);
+    printf("Total Pages: 0x%I64x (%I64dMB)\n\n", TotalPages, Megabytes);
     return;
 }
 
@@ -2088,7 +2089,7 @@ Return Value:
         break;
     }
 
-    RtlDebugPrint("%24s PA 0x%8I64x (VA 0x%I64x) PageCount 0x%8I64x "
+    printf("%24s PA 0x%8I64x (VA 0x%I64x) PageCount 0x%8I64x "
                   "Attr 0x%x\n",
                   TypeString,
                   Descriptor->PhysicalStart,

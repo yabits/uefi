@@ -32,6 +32,7 @@ Environment:
 #include "ueficore.h"
 #include "fwvol.h"
 #include "fvblock.h"
+#include <stdio.h>
 
 //
 // --------------------------------------------------------------------- Macros
@@ -377,7 +378,7 @@ Return Value:
         }
 
         if (((UINTN)BaseAddress % Alignment) != 0) {
-            RtlDebugPrint("Firmware Volume Base Address 0x%I64x is not "
+            printf("Firmware Volume Base Address 0x%I64x is not "
                           "aligned to 0x%x.\n",
                           BaseAddress,
                           Alignment);

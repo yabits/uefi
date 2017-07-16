@@ -33,6 +33,7 @@ Environment:
 #include "bds.h"
 #include <minoca/uefi/guid/globlvar.h>
 #include <minoca/uefi/guid/coninct.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -381,7 +382,7 @@ Return Value:
             // Hmm... eventually do something more intelligent here.
             //
 
-            RtlDebugPrint("Nothing to boot, hanging...\n");
+            printf("Nothing to boot, hanging...\n");
             while (TRUE) {
                 NOTHING;
             }
@@ -586,7 +587,7 @@ Return Value:
     if ((DevicePath != NULL) &&
         (EfiCoreIsDevicePathValid(DevicePath, VariableSize) == FALSE)) {
 
-        RtlDebugPrint("Deleting invalid console variable.\n");
+        printf("Deleting invalid console variable.\n");
         Status = EfiSetVariable(VariableName,
                                 &EfiGlobalVariableGuid,
                                 Attributes,

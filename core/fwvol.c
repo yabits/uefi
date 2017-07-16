@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include "fwvolp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -840,7 +841,7 @@ Return Value:
 
                 if (EFI_IS_FFS_FILE2(FfsHeader)) {
                     if (Device->IsFfs3 == FALSE) {
-                        RtlDebugPrint("Warning: Found an FFS3 file in an FFS2 "
+                        printf("Warning: Found an FFS3 file in an FFS2 "
                                       "volume!\n");
                     }
 
@@ -873,7 +874,7 @@ Return Value:
             ASSERT(EFI_FFS_FILE2_SIZE(FfsHeader) > MAX_FFS_SIZE);
 
             if (Device->IsFfs3 == FALSE) {
-                RtlDebugPrint("Warning: Found an FFS3 file in an FFS2 "
+                printf("Warning: Found an FFS3 file in an FFS2 "
                               "volume!\n");
 
                 //

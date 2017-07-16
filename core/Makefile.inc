@@ -39,7 +39,8 @@ TARGETS-y += core/memory.o core/part.o
 TARGETS-y += core/partelto.o core/partgpt.o
 TARGETS-y += core/partmbr.o core/pool.o
 TARGETS-y += core/ramdisk.o core/smbios.o
-TARGETS-y += core/stubs.o core/tpl.o
+# TARGETS-y += core/stubs.o core/tpl.o
+TARGETS-y += core/tpl.o
 TARGETS-y += core/timer.o core/util.o
 TARGETS-y += core/version.o core/vidcon.o
 

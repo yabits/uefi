@@ -31,6 +31,7 @@ Environment:
 
 #include "ueficore.h"
 #include "imagep.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -743,7 +744,7 @@ Return Value:
                     break;
 
                 default:
-                    RtlDebugPrint("Error: Unknown relocation type.\n");
+                    printf("Error: Unknown relocation type.\n");
                     Context->ImageError = IMAGE_ERROR_FAILED_RELOCATION;
                     return RETURN_LOAD_ERROR;
                 }

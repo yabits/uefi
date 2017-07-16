@@ -40,6 +40,8 @@ Environment:
 #include <minoca/uefi/protocol/sfilesys.h>
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
+#include <string.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -533,7 +535,7 @@ Return Value:
     //
 
     if (Image != EfiCurrentImage) {
-        RtlDebugPrint("Error: Image cannot exit while in the middle of "
+        printf("Error: Image cannot exit while in the middle of "
                       "starting another image.\n");
 
         ExitStatus = EFI_INVALID_PARAMETER;
@@ -736,7 +738,7 @@ Return Value:
 
     ParentImage = EfipCoreGetImageDataFromHandle(ParentImageHandle);
     if (ParentImage == NULL) {
-        RtlDebugPrint("LoadImage: Invalid Parent image handle.\n");
+        printf("LoadImage: Invalid Parent image handle.\n");
         return EFI_INVALID_PARAMETER;
     }
 
@@ -937,12 +939,12 @@ Return Value:
 
                 DebuggerModule->Size = Image->ImagePageCount << EFI_PAGE_SHIFT;
                 DebuggerModule->EntryPoint = Image->EntryPoint;
-                RtlStringCopy(DebuggerModule->BinaryName,
+                strncpy(DebuggerModule->BinaryName,
                               AsciiFileName,
                               AsciiFileNameSize);
 
                 Image->DebuggerData = DebuggerModule;
-                KdReportModuleChange(DebuggerModule, TRUE);
+                //KdReportModuleChange(DebuggerModule, TRUE);
             }
 
             EfiCoreFreePool(AsciiFileName);
@@ -1551,7 +1553,7 @@ Return Value:
     }
 
     if (!EFI_IMAGE_MACHINE_TYPE_SUPPORTED(Image->ImageContext.Machine)) {
-        RtlDebugPrint("Image Type 0x%x can't be loaded.\n",
+        printf("Image Type 0x%x can't be loaded.\n",
                       Image->ImageContext.Machine);
 
         return EFI_UNSUPPORTED;
@@ -1636,7 +1638,7 @@ Return Value:
         if ((Image->ImageContext.RelocationsStripped != FALSE) &&
             (Image->ImageContext.ImageAddress != DestinationBuffer)) {
 
-            RtlDebugPrint("Image must be loaded at 0x%x.\n",
+            printf("Image must be loaded at 0x%x.\n",
                           (UINTN)Image->ImageContext.ImageAddress);
 
             return EFI_INVALID_PARAMETER;
@@ -1884,7 +1886,7 @@ Return Value:
         //
 
         if (Image->DebuggerData != NULL) {
-            KdReportModuleChange(Image->DebuggerData, FALSE);
+            //KdReportModuleChange(Image->DebuggerData, FALSE);
             EfiCoreFreePool(Image->DebuggerData);
         }
 

@@ -33,6 +33,8 @@ Environment:
 #include "ueficore.h"
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
+#include <string.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -343,8 +345,8 @@ Return Value:
     // Initialize the debugging subsystem.
     //
 
-    RtlZeroMemory(&EfiModuleBuffer, sizeof(EfiModuleBuffer));
-    ModuleNameLength = RtlStringLength(FirmwareBinaryName) + 1;
+    memset(&EfiModuleBuffer, 0, sizeof(EfiModuleBuffer));
+    ModuleNameLength = strlen(FirmwareBinaryName) + 1;
     if (ModuleNameLength > EFI_FIRMWARE_BINARY_NAME_MAX_SIZE) {
         ModuleNameLength = EFI_FIRMWARE_BINARY_NAME_MAX_SIZE;
     }
@@ -352,7 +354,7 @@ Return Value:
     DebugModule->StructureSize = sizeof(DEBUG_MODULE) + ModuleNameLength -
                                  (ANYSIZE_ARRAY * sizeof(CHAR));
 
-    RtlStringCopy(DebugModule->BinaryName,
+    strncpy(DebugModule->BinaryName,
                   FirmwareBinaryName,
                   ModuleNameLength);
 
@@ -364,8 +366,8 @@ Return Value:
         // Stall does not work this early, so prevent KD from using it.
         //
 
-        OriginalTimeout = KdSetConnectionTimeout(MAX_ULONG);
-        KStatus = KdInitialize(&EfiDebugDevice, DebugModule);
+        //OriginalTimeout = KdSetConnectionTimeout(MAX_ULONG);
+        //KStatus = KdInitialize(&EfiDebugDevice, DebugModule);
         if (!KSUCCESS(KStatus)) {
             goto InitializeEnd;
         }
@@ -389,7 +391,7 @@ Return Value:
     // debuggable.
     //
 
-    EfiStatus = EfiPlatformInitialize(0);
+    //EfiStatus = EfiPlatformInitialize(0);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -471,7 +473,7 @@ Return Value:
     //
 
     if (EfiDebugFirmware != FALSE) {
-        KdSetConnectionTimeout(OriginalTimeout);
+        //KdSetConnectionTimeout(OriginalTimeout);
     }
 
     EfiStatus = EfiCoreInitializeImageServices(FirmwareBaseAddress,
@@ -505,7 +507,7 @@ Return Value:
     }
 
     Step += 1;
-    EfiStatus = EfiPlatformInitialize(1);
+    //EfiStatus = EfiPlatformInitialize(1);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -550,7 +552,7 @@ Return Value:
     //
 
     Step += 1;
-    EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
+    //EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -580,13 +582,13 @@ Return Value:
     //
 
     Step += 1;
-    EfiStatus = EfiPlatformEnumerateDevices();
+    //EfiStatus = EfiPlatformEnumerateDevices();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
 
     Step += 1;
-    EfiStatus = EfiPlatformInitialize(2);
+    //EfiStatus = EfiPlatformInitialize(2);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -597,7 +599,7 @@ Return Value:
 
     EfiStatus = EfiGetTime(&Time, NULL);
     if (!EFI_ERROR(EfiStatus)) {
-        RtlDebugPrint("%d/%d/%d %02d:%02d:%02d\n",
+        printf("%d/%d/%d %02d:%02d:%02d\n",
                       Time.Month,
                       Time.Day,
                       Time.Year,
@@ -619,13 +621,13 @@ InitializeEnd:
     // Never return.
     //
 
-    RtlDebugPrint("EFI firmware failed. KStatus %d, EFI Status 0x%x, Step %d\n",
+    printf("EFI firmware failed. KStatus %d, EFI Status 0x%x, Step %d\n",
                   KStatus,
                   EfiStatus,
                   Step);
 
     while (TRUE) {
-        RtlDebugBreak();
+        //RtlDebugBreak();
     }
 
     return;
