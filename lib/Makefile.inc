@@ -17,4 +17,5 @@
 #
 
 include lib/fatlib/Makefile.inc
+include lib/rtl/Makefile.inc
 

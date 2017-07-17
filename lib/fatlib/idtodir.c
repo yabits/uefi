@@ -33,6 +33,7 @@ Environment:
 #include <minoca/lib/fat/fatlib.h>
 #include <minoca/lib/fat/fat.h>
 #include "fatlibp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -222,7 +223,7 @@ Return Value:
         if ((ExistingMapping->DirectoryCluster != DirectoryCluster) ||
             (ExistingMapping->DirectoryOffset != DirectoryOffset)) {
 
-            RtlDebugPrint("FAT: Error: Cluster at directory/offset "
+            printf("FAT: Error: Cluster at directory/offset "
                           "0x%x/0x%I64x also at 0x%x/0x%I64x.\n",
                           DirectoryCluster,
                           DirectoryOffset,

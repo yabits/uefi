@@ -33,6 +33,7 @@ Environment:
 #include <minoca/lib/fat/fatlib.h>
 #include <minoca/lib/fat/fat.h>
 #include "fatlibp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -406,7 +407,7 @@ Return Value:
         if ((EncodedProperties.Owner != FileProperties->UserId) ||
             (EncodedProperties.Group != FileProperties->GroupId)) {
 
-            RtlDebugPrint("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
+            printf("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
                           "(ID 0x%I64x UID 0x%x GID 0x%x)\n",
                           FileProperties,
                           FileProperties->FileId,
@@ -1267,7 +1268,7 @@ Return Value:
     }
 
     if (*NextCluster == FAT_CLUSTER_FREE) {
-        RtlDebugPrint("FAT: Next cluster of 0 for 0x%x.\n", CurrentCluster);
+        printf("FAT: Next cluster of 0 for 0x%x.\n", CurrentCluster);
         *NextCluster = Volume->ClusterEnd;
     }
 
@@ -1612,10 +1613,10 @@ Return Value:
             //
 
             if (Cluster == FAT_CLUSTER_FREE) {
-                RtlDebugPrint("FAT: Freeing cluster 0.\n");
+                printf("FAT: Freeing cluster 0.\n");
 
             } else {
-                RtlDebugPrint("FAT: Freeing invalid cluster 0x%x, total 0x%x\n",
+                printf("FAT: Freeing invalid cluster 0x%x, total 0x%x\n",
                               Cluster,
                               TotalClusters);
             }
@@ -2249,7 +2250,7 @@ Return Value:
     ASSERT((Cluster < FAT_CLUSTER_BEGIN) || (Cluster > Volume->ClusterBad));
 
     if (Entry->FileSizeInBytes != 0) {
-        RtlDebugPrint("FAT: File size was non-zero but had no cluster.\n");
+        printf("FAT: File size was non-zero but had no cluster.\n");
         Entry->FileSizeInBytes = 0;
     }
 

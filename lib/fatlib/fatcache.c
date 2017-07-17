@@ -32,6 +32,7 @@ Environment:
 #include <minoca/lib/fat/fatlib.h>
 #include <minoca/lib/fat/fat.h>
 #include "fatlibp.h"
+#include <stdio.h>
 
 //
 // --------------------------------------------------------------------- Macros
@@ -562,7 +563,7 @@ Return Value:
     //
 
     if ((NewValue == FAT_CLUSTER_FREE) && (Original == FAT_CLUSTER_FREE)) {
-        RtlDebugPrint("FAT: Cluster 0x%x was already free!\n", Cluster);
+        printf("FAT: Cluster 0x%x was already free!\n", Cluster);
     }
 
     //

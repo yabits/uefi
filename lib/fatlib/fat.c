@@ -33,6 +33,7 @@ Environment:
 #include <minoca/lib/fat/fatlib.h>
 #include <minoca/lib/fat/fat.h>
 #include "fatlibp.h"
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -1247,7 +1248,7 @@ Return Value:
         (FirstCluster >= FatVolume->ClusterCount)) {
 
         if (FirstCluster != FatVolume->RootDirectoryCluster) {
-            RtlDebugPrint("FAT: Tried to open invalid cluster 0x%I64x "
+            printf("FAT: Tried to open invalid cluster 0x%I64x "
                           "(total 0x%x)\n",
                           FileId,
                           FatVolume->ClusterCount);
@@ -1277,7 +1278,7 @@ Return Value:
 
         CacheDataSize = FatGetIoCacheEntryDataSize();
         if (IS_ALIGNED(FatVolume->ClusterByteOffset, CacheDataSize) == FALSE) {
-            RtlDebugPrint("FAT: Page files are not supported on volumes whose "
+            printf("FAT: Page files are not supported on volumes whose "
                           "clusters are not cache-aligned:\n"
                           "\tCluster Byte Offset: 0x%I64x\n"
                           "\tRequired Alignment: 0x%x\n\n",
@@ -3249,7 +3250,7 @@ Return Value:
                 (((NewProperties->UserId & ~MAX_USHORT) != 0) ||
                  ((NewProperties->GroupId & ~MAX_USHORT) != 0))) {
 
-                RtlDebugPrint("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
+                printf("FAT: Truncated UID/GID: FILE_PROPERTIES 0x%x "
                               "(ID 0x%I64x UID 0x%x GID 0x%x)\n",
                               NewProperties,
                               NewProperties->FileId,
@@ -3473,7 +3474,7 @@ Return Value:
         //
 
         if (NextCluster == FAT_CLUSTER_FREE) {
-            RtlDebugPrint("FAT: DeleteFileBlocks: Free cluster after 0x%x\n",
+            printf("FAT: DeleteFileBlocks: Free cluster after 0x%x\n",
                           StartingCluster);
         }
 
