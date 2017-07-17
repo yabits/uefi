@@ -1,0 +1,61 @@
+################################################################################
+#
+#   Copyright (c) 2013 Minoca Corp.
+#
+#    This file is licensed under the terms of the GNU General Public License
+#    version 3. Alternative licensing terms are available. Contact
+#    info@minocacorp.com for details. See the LICENSE file at the root of this
+#    project for complete licensing information.
+#
+#   File Name:
+#
+#       sources
+#
+#   Abstract:
+#
+#       This file contains the common object files for the Runtime Library base
+#       layer.
+#
+#   Author:
+#
+#       Evan Green 23-Oct-2013
+#
+#   Environment:
+#
+#       Build
+#
+################################################################################
+
+OBJS = crc32.o    \
+       heap.o     \
+       heapprof.o \
+       math.o     \
+       print.o    \
+       rbtree.o   \
+       scan.o     \
+       string.o   \
+       time.o     \
+       timezone.o \
+       version.o  \
+       wchar.o    \
+
+OBJS_WIDE = wprint.o   \
+            wscan.o    \
+            wstring.o  \
+            wtime.o    \
+
+ARMV7_OBJS = armv7/intrinsa.o \
+             armv7/intrinsc.o \
+             armv7/rtlarch.o  \
+             armv7/rtlmem.o   \
+             fp2int.o         \
+
+ARMV6_OBJS = $(ARMV7_OBJS)
+
+X86_OBJS = x86/intrinsc.o \
+           x86/rtlarch.o  \
+           x86/rtlmem.o   \
+
+X64_OBJS = x64/rtlarch.o  \
+           x64/rtlmem.o   \
+
