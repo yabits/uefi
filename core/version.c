@@ -32,7 +32,6 @@ Environment:
 
 #include "ueficore.h"
 #include "version.h"
-#include <string.h>
 #include <stdio.h>
 
 //
@@ -175,22 +174,22 @@ Return Value:
     VersionInformation->BuildTime.Nanoseconds = 0;
     VersionInformation->ProductName = NULL;
     VersionInformation->BuildString = NULL;
-    BuildStringSize = strlen(EfiBuildString);
+    BuildStringSize = RtlStringLength(EfiBuildString);
     if (BuildStringSize != 0) {
         BuildStringSize += 1;
     }
 
-    ProductNameSize = strlen(EfiProductName) + 1;
+    ProductNameSize = RtlStringLength(EfiProductName) + 1;
     if ((BufferSize != NULL) && (Buffer != NULL)) {
         if (*BufferSize < BuildStringSize + ProductNameSize) {
             Status = STATUS_BUFFER_TOO_SMALL;
 
         } else {
-            memcpy(Buffer, EfiProductName, ProductNameSize);
+            RtlCopyMemory(Buffer, EfiProductName, ProductNameSize);
             VersionInformation->ProductName = Buffer;
             if (BuildStringSize != 0) {
                 VersionInformation->BuildString = Buffer + ProductNameSize;
-                memcpy(VersionInformation->BuildString,
+                RtlCopyMemory(VersionInformation->BuildString,
                               EfiBuildString,
                               BuildStringSize);
             }

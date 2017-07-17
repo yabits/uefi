@@ -40,7 +40,6 @@ Environment:
 #include <minoca/uefi/protocol/sfilesys.h>
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
-#include <string.h>
 #include <stdio.h>
 
 //
@@ -939,7 +938,7 @@ Return Value:
 
                 DebuggerModule->Size = Image->ImagePageCount << EFI_PAGE_SHIFT;
                 DebuggerModule->EntryPoint = Image->EntryPoint;
-                strncpy(DebuggerModule->BinaryName,
+                RtlStringCopy(DebuggerModule->BinaryName,
                               AsciiFileName,
                               AsciiFileNameSize);
 

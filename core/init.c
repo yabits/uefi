@@ -33,7 +33,6 @@ Environment:
 #include "ueficore.h"
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
-#include <string.h>
 #include <stdio.h>
 
 //
@@ -345,8 +344,8 @@ Return Value:
     // Initialize the debugging subsystem.
     //
 
-    memset(&EfiModuleBuffer, 0, sizeof(EfiModuleBuffer));
-    ModuleNameLength = strlen(FirmwareBinaryName) + 1;
+    RtlZeroMemory(&EfiModuleBuffer, sizeof(EfiModuleBuffer));
+    ModuleNameLength = RtlStringLength(FirmwareBinaryName) + 1;
     if (ModuleNameLength > EFI_FIRMWARE_BINARY_NAME_MAX_SIZE) {
         ModuleNameLength = EFI_FIRMWARE_BINARY_NAME_MAX_SIZE;
     }
@@ -354,7 +353,7 @@ Return Value:
     DebugModule->StructureSize = sizeof(DEBUG_MODULE) + ModuleNameLength -
                                  (ANYSIZE_ARRAY * sizeof(CHAR));
 
-    strncpy(DebugModule->BinaryName,
+    RtlStringCopy(DebugModule->BinaryName,
                   FirmwareBinaryName,
                   ModuleNameLength);
 
