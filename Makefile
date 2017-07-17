@@ -134,7 +134,7 @@ CFLAGS += $(call cc-option, -fno-stack-protector,)
 
 LIBS := $(LIBPAYLOAD) $(LIBGCC)
 
-SUBDIRS-y += archlib core
+SUBDIRS-y += archlib core lib
 
 $(foreach subdir,$(SUBDIRS-y),$(eval include $(subdir)/Makefile.inc))
 

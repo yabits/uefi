@@ -1,0 +1,32 @@
+################################################################################
+#
+#   Copyright (c) 2012 Minoca Corp.
+#
+#    This file is licensed under the terms of the GNU General Public License
+#    version 3. Alternative licensing terms are available. Contact
+#    info@minocacorp.com for details. See the LICENSE file at the root of this
+#    project for complete licensing information.
+#
+#   File Name:
+#
+#       sources
+#
+#   Abstract:
+#
+#       This module defines the sources files for the FAT32 file system.
+#
+#   Author:
+#
+#       Evan Green 23-Sep-2012
+#
+#   Environment:
+#
+#       Boot Environment, Build Environment, and Kernel Mode
+#
+################################################################################
+
+OBJS = fat.o      \
+       fatcache.o \
+       fatsup.o   \
+       idtodir.o  \
+
