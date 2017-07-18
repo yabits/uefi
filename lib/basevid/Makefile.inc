@@ -16,7 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include lib/basevid/Makefile.inc
-include lib/fatlib/Makefile.inc
-include lib/rtl/Makefile.inc
+TARGETS-y += lib/basevid/textvid.o lib/basevid/fontdata.o
 
