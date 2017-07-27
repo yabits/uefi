@@ -128,7 +128,7 @@ CPPFLAGS += -Iinclude -I$(obj)
 CPPFLAGS += -I$(GCCINCDIR) -include $(INCPAYLOAD)/kconfig.h
 CPPFLAGS += -Icore -I../include
 
-CFLAGS := -Wall -Wshadow -Os -pipe
+CFLAGS := -Wall -Wshadow -O0 -g -pipe
 CFLAGS += -fomit-frame-pointer -fno-common -ffreestanding -fno-strict-aliasing
 CFLAGS += $(call cc-option, -fno-stack-protector,)
 
