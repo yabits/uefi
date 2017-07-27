@@ -625,10 +625,6 @@ InitializeEnd:
                   EfiStatus,
                   Step);
 
-    while (TRUE) {
-        //RtlDebugBreak();
-    }
-
     return;
 }
 

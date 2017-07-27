@@ -18,5 +18,6 @@
 
 include lib/basevid/Makefile.inc
 include lib/fatlib/Makefile.inc
+#include lib/kd/Makefile.inc
 include lib/rtl/Makefile.inc
 

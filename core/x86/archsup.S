@@ -213,15 +213,6 @@ Return Value:
 --*/
 
 FUNCTION(EfipBreakExceptionHandlerAsm)
-    pushl   $0                      # Push a dummy error code.
-    call    EfipGenerateTrapFrame   # Create a local trap frame.
-    pushl   %esp                    # Push a pointer to it as a parameter.
-    pushl   $0                      # Push a NULL parameter.
-    pushl   $EXCEPTION_BREAK        # Push the break parameter.
-    call    KdDebugExceptionHandler # Call the main exception handler.
-    addl    $0xC, %esp              # Pop the parameters.
-    call    EfipRestoreTrapFrame    # Restore the trap frame
-    addl    $4, %esp                # Pop the error code.
     iret                            # Return from the exception.
 
 END_FUNCTION(EfipBreakExceptionHandlerAsm)
@@ -258,15 +249,6 @@ Return Value:
 --*/
 
 FUNCTION(EfipSingleStepExceptionHandlerAsm)
-    pushl   $0                      # Push a dummy error code.
-    call    EfipGenerateTrapFrame   # Create a local trap frame.
-    pushl   %esp                    # Push a pointer to it as a parameter.
-    pushl   $0                      # Push a NULL parameter.
-    pushl   $EXCEPTION_SINGLE_STEP  # Push the exception parameter.
-    call    KdDebugExceptionHandler # Call the main exception handler.
-    addl    $0xC, %esp              # Pop the parameters.
-    call    EfipRestoreTrapFrame    # Restore the trap frame
-    addl    $4, %esp                # Pop the error code.
     iret                            # Return from the exception.
 
 END_FUNCTION(EfipSingleStepExceptionHandlerAsm)
@@ -309,17 +291,6 @@ Return Value:
 --*/
 
 FUNCTION(EfipDebugServiceHandlerAsm)
-    pushl   $0                      # Push a dummy error code.
-    call    EfipGenerateTrapFrame   # Create a local trap frame.
-    mov     TRAP_EAX(%esp), %eax    # Get eax, containing the service request.
-    mov     TRAP_ECX(%esp), %ecx    # Get ecx, containing the parameter.
-    pushl   %esp                    # Push a pointer to the trap frame.
-    pushl   %ecx                    # Push exception parameter.
-    pushl   %eax                    # Push exception type.
-    call    KdDebugExceptionHandler # Call the main exception handler.
-    addl    $0xc, %esp              # Pop the parameters.
-    call    EfipRestoreTrapFrame    # Restore the trap frame
-    addl    $4, %esp                # Pop the error code.
     iret                            # Return from the exception.
 
 END_FUNCTION(EfipDebugServiceHandlerAsm)
@@ -399,14 +370,6 @@ Return Value:
 --*/
 
 FUNCTION(EfipProtectionFaultHandlerAsm)
-    call    EfipGenerateTrapFrame   # Create a local trap frame.
-    pushl   %esp                    # Push a pointer to it as a parameter.
-    pushl   $0                      # Push dummy parameter.
-    pushl   $EXCEPTION_ACCESS_VIOLATION  # Push exception type parameter.
-    call    KdDebugExceptionHandler      # Let the debugger handle this.
-    addl    $0xC, %esp              # Pop the parameter.
-    call    EfipRestoreTrapFrame    # Restore the trap frame
-    addl    $4, %esp                # Pop the dummy error code.
     iret                            # Return from the exception.
 
 END_FUNCTION(EfipProtectionFaultHandlerAsm)

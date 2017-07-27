@@ -32,6 +32,7 @@ Environment:
 #include "ueficore.h"
 #include <minoca/kernel/hmod.h>
 #include <minoca/kernel/kdebug.h>
+#include <stdio.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -684,7 +685,7 @@ Return Value:
     //
 
     va_start(ArgumentList, Format);
-    KdPrintWithArgumentList(Format, ArgumentList);
+    printf(Format, ArgumentList);
     va_end(ArgumentList);
     if (EfiSystemTable->StdErr != NULL) {
         va_start(ArgumentList, Format);

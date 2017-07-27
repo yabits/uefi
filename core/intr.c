@@ -82,9 +82,9 @@ Return Value:
 
     EFI_STATUS Status;
 
-    Status = EfiPlatformInitializeInterrupts(&EfiBeginInterruptFunction,
-                                             &EfiHandleInterruptFunction,
-                                             &EfiEndInterruptFunction);
+    //Status = EfiPlatformInitializeInterrupts(&EfiBeginInterruptFunction,
+    //                                         &EfiHandleInterruptFunction,
+    //                                         &EfiEndInterruptFunction);
 
     if (EFI_ERROR(Status)) {
         goto CoreInitializeInterruptServicesEnd;
@@ -118,7 +118,7 @@ Return Value:
 
 {
 
-    EfiPlatformTerminateInterrupts();
+    //EfiPlatformTerminateInterrupts();
     return;
 }
 
@@ -160,7 +160,7 @@ Return Value:
     }
 
     if (InterruptNumber == EfiClockTimerInterruptNumber) {
-        KdPollForBreakRequest();
+        //KdPollForBreakRequest();
         EfiCoreServiceClockInterrupt(InterruptNumber);
     }
 

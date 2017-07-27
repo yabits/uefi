@@ -235,7 +235,6 @@ Return Value:
 {
 
     printf(" *** Divide by zero ***\n");
-    KdDebugExceptionHandler(EXCEPTION_DIVIDE_BY_ZERO, NULL, TrapFrame);
     return;
 }
 
@@ -284,7 +283,6 @@ Return Value:
         printf(", Read ***\n");
     }
 
-    KdDebugExceptionHandler(EXCEPTION_ACCESS_VIOLATION, NULL, TrapFrame);
     return;
 }
 

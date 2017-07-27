@@ -1,0 +1,15 @@
+##
+## Copyright (C) 2008-2009 coresystems GmbH
+##
+
+mainmenu "FILO Configuration"
+
+choice
+	prompt "Build for architecture"
+	default TARGET_I386
+
+config TARGET_I386
+	bool "x86"
+
+endchoice
+
