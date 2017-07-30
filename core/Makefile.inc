@@ -44,5 +44,5 @@ TARGETS-y += core/ramdisk.o core/smbios.o
 TARGETS-y += core/tpl.o
 TARGETS-y += core/timer.o core/util.o
 TARGETS-y += core/version.o core/vidcon.o
-TARGETS-y += core/main.o
+#TARGETS-y += core/main.o
 

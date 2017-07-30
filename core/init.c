@@ -390,7 +390,7 @@ Return Value:
     // debuggable.
     //
 
-    //EfiStatus = EfiPlatformInitialize(0);
+    EfiStatus = EfiPlatformInitialize(0);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -506,7 +506,7 @@ Return Value:
     }
 
     Step += 1;
-    //EfiStatus = EfiPlatformInitialize(1);
+    EfiStatus = EfiPlatformInitialize(1);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
@@ -587,7 +587,7 @@ Return Value:
     }
 
     Step += 1;
-    //EfiStatus = EfiPlatformInitialize(2);
+    EfiStatus = EfiPlatformInitialize(2);
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
