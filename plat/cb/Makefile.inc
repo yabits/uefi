@@ -18,5 +18,6 @@
 
 TARGETS-y += plat/cb/acpi.o
 TARGETS-y += plat/cb/main.o plat/cb/memmap.o
+TARGETS-y += plat/cb/timer.o
 # TARGETS-y += plat/cb/disk.o plat/cb/video.o
 

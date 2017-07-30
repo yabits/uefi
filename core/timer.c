@@ -194,10 +194,10 @@ Return Value:
 
     EFI_STATUS Status;
 
-    //Status = EfiPlatformSetWatchdogTimer(Timeout,
-    //                                     WatchdogCode,
-    //                                     DataSize,
-    //                                     WatchdogData);
+    Status = EfiPlatformSetWatchdogTimer(Timeout,
+                                         WatchdogCode,
+                                         DataSize,
+                                         WatchdogData);
 
     return Status;
 }
@@ -397,11 +397,11 @@ Return Value:
     EFI_STATUS Status;
 
     Enabled = EfiDisableInterrupts();
-    //Status = EfiPlatformInitializeTimers(&EfiClockTimerInterruptNumber,
-    //                                     &EfiClockTimerServiceRoutine,
-    //                                     &EfiReadTimerRoutine,
-    //                                     &EfiReadTimerFrequency,
-    //                                     &EfiReadTimerWidth);
+    Status = EfiPlatformInitializeTimers(&EfiClockTimerInterruptNumber,
+                                         &EfiClockTimerServiceRoutine,
+                                         &EfiReadTimerRoutine,
+                                         &EfiReadTimerFrequency,
+                                         &EfiReadTimerWidth);
 
     if (EFI_ERROR(Status)) {
         goto CoreInitializeTimerServicesEnd;
@@ -450,7 +450,7 @@ Return Value:
 
 {
 
-    //EfiPlatformTerminateTimers();
+    EfiPlatformTerminateTimers();
     return;
 }
 
