@@ -179,7 +179,7 @@ Return Value:
 
     EFI_STATUS Status;
 
-    //Status = EfipPcatEnumerateDisks();
+    Status = EfipPcatEnumerateDisks();
     if (EFI_ERROR(Status)) {
         return Status;
     }

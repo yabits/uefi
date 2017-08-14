@@ -581,7 +581,7 @@ Return Value:
     //
 
     Step += 1;
-    //EfiStatus = EfiPlatformEnumerateDevices();
+    EfiStatus = EfiPlatformEnumerateDevices();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }

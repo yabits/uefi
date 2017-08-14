@@ -31,7 +31,7 @@ Environment:
 
 #include <uefifw.h>
 #include <minoca/uefi/protocol/blockio.h>
-#include "biosfw.h"
+#include <fs.h>
 
 //
 // --------------------------------------------------------------------- Macros
@@ -294,22 +294,10 @@ Return Value:
     EFI_STATUS Status;
 
     for (DriveIndex = 0;
-         DriveIndex < EFI_PCAT_HARD_DRIVE_COUNT;
+         DriveIndex < 8;
          DriveIndex += 1) {
 
-        Status = EfipPcatProbeDrive(DriveIndex + EFI_PCAT_HARD_DRIVE_START);
-        if (EFI_ERROR(Status)) {
-            break;
-        }
-    }
-
-    for (DriveIndex = 0;
-         DriveIndex < EFI_PCAT_REMOVABLE_DRIVE_COUNT;
-         DriveIndex += 1) {
-
-        Status = EfipPcatProbeDrive(
-                                  DriveIndex + EFI_PCAT_REMOVABLE_DRIVE_START);
-
+        Status = EfipPcatProbeDrive(DriveIndex);
         if (EFI_ERROR(Status)) {
             break;
         }
@@ -603,10 +591,14 @@ Return Value:
     UINT32 SectorSize;
     EFI_STATUS Status;
 
-    Status = EfipPcatGetDiskParameters(DriveNumber, &SectorCount, &SectorSize);
-    if (EFI_ERROR(Status)) {
-        return Status;
+    Status = ide_probe_verbose(DriveNumber);
+    if (Status != 0) {
+        return EFI_NOT_FOUND;
     }
+
+    // Really dirty hack
+    SectorSize = 2048;
+    SectorCount = 0xffffffffffffffff;
 
     //
     // There's a disk there. Allocate a data structure for it.
@@ -659,102 +651,6 @@ Return Value:
 }
 
 EFI_STATUS
-EfipPcatGetDiskParameters (
-    UINT8 DriveNumber,
-    UINT64 *SectorCount,
-    UINT32 *SectorSize
-    )
-
-/*++
-
-Routine Description:
-
-    This routine uses the BIOS to determine the geometry for the given disk.
-
-Arguments:
-
-    DriveNumber - Supplies the drive number of the disk to query. Valid values
-        are:
-
-        0x80 - Boot drive.
-
-        0x81, ... - Additional hard drives
-
-        0x0, ... - Floppy drives.
-
-    SectorCount - Supplies a pointer where the total number of sectors will be
-        returned (one beyond the last valid LBA).
-
-    SectorSize - Supplies a pointer where the size of a sector will be returned
-        on success.
-
-Return Value:
-
-    STATUS_SUCCESS if the operation completed successfully.
-
-    STATUS_FIRMWARE_ERROR if the BIOS returned an error.
-
-    Other error codes.
-
---*/
-
-{
-
-    UINTN BufferAddress;
-    PINT13_EXTENDED_DRIVE_PARAMETERS Parameters;
-    BIOS_CALL_CONTEXT RealModeContext;
-    EFI_STATUS Status;
-
-    //
-    // Create a standard BIOS call context.
-    //
-
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto GetDiskGeometryEnd;
-    }
-
-    //
-    // Int 13 function 8 is "Get disk parameters". Ah takes the function number
-    // (8), and dl takes the drive number.
-    //
-
-    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
-    RealModeContext.Edx = DriveNumber;
-    RealModeContext.Ds = 0;
-    BufferAddress = (UINTN)(RealModeContext.DataPage);
-    RealModeContext.Esi = (UINT16)BufferAddress;
-    Parameters = (PINT13_EXTENDED_DRIVE_PARAMETERS)(UINTN)BufferAddress;
-    EfiSetMem(Parameters, sizeof(INT13_EXTENDED_DRIVE_PARAMETERS), 0);
-    Parameters->PacketSize = sizeof(INT13_EXTENDED_DRIVE_PARAMETERS);
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_NOT_FOUND;
-        goto GetDiskGeometryEnd;
-    }
-
-    *SectorCount = Parameters->TotalSectorCount;
-    *SectorSize = Parameters->SectorSize;
-    Status = EFI_SUCCESS;
-
-GetDiskGeometryEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
-    return Status;
-}
-
-EFI_STATUS
 EfipPcatBlockOperation (
     PEFI_PCAT_DISK Disk,
     BOOLEAN Write,
@@ -796,78 +692,18 @@ Return Value:
 
 {
 
-    UINTN RealModeBuffer;
-    BIOS_CALL_CONTEXT RealModeContext;
-    PINT13_DISK_ACCESS_PACKET Request;
     EFI_STATUS Status;
 
-    //
-    // Create a standard BIOS call context.
-    //
-
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto BlockOperationEnd;
-    }
-
-    //
-    // Create the disk access packet on the stack.
-    //
-
-    Request = (PINT13_DISK_ACCESS_PACKET)(RealModeContext.Esp -
-                                          sizeof(INT13_DISK_ACCESS_PACKET));
-
-    Request->PacketSize = sizeof(INT13_DISK_ACCESS_PACKET);
-    Request->Reserved = 0;
-    Request->BlockCount = SectorCount;
-    RealModeBuffer = (UINTN)(RealModeContext.DataPage);
-    Request->TransferBuffer = (UINTN)RealModeBuffer;
-    Request->BlockAddress = AbsoluteSector;
-    RealModeContext.Edx = Disk->DriveNumber;
-    RealModeContext.Esp = (UINTN)Request;
-    RealModeContext.Esi = (UINTN)Request;
     if (Write != FALSE) {
-        RealModeContext.Eax = INT13_EXTENDED_WRITE << 8;
-        EfiCopyMem((VOID *)RealModeBuffer,
-                   Buffer,
-                   SectorCount * Disk->SectorSize);
-
-    } else {
-        RealModeContext.Eax = INT13_EXTENDED_READ << 8;
+        return EFI_UNSUPPORTED;
     }
 
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error (carry flag set). The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto BlockOperationEnd;
+    Status = ide_read_blocks(Disk->DriveNumber, AbsoluteSector, SectorCount, Buffer);
+    if (Status != 0) {
+        return EFI_DEVICE_ERROR;
     }
 
-    //
-    // Copy the data over from the real mode data page to the caller's buffer.
-    //
-
-    if (Write == FALSE) {
-        EfiCopyMem(Buffer,
-                   (VOID *)RealModeBuffer,
-                   SectorCount * Disk->SectorSize);
-    }
-
-    Status = EFI_SUCCESS;
-
-BlockOperationEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
-    return Status;
+    return EFI_SUCCESS;
 }
 
 EFI_STATUS
@@ -903,47 +739,6 @@ Return Value:
 --*/
 
 {
-
-    BIOS_CALL_CONTEXT RealModeContext;
-    EFI_STATUS Status;
-
-    //
-    // Create a standard BIOS call context.
-    //
-
-    Status = EfipCreateBiosCallContext(&RealModeContext, 0x13);
-    if (EFI_ERROR(Status)) {
-        goto PcatResetDiskEnd;
-    }
-
-    //
-    // Int 13 function zero is reset.
-    //
-
-    RealModeContext.Eax = INT13_EXTENDED_GET_DRIVE_PARAMETERS << 8;
-    RealModeContext.Edx = DriveNumber;
-
-    //
-    // Execute the firmware call.
-    //
-
-    EfipExecuteBiosCall(&RealModeContext);
-
-    //
-    // Check for an error. The status code is in Ah.
-    //
-
-    if (((RealModeContext.Eax & 0xFF00) != 0) ||
-        ((RealModeContext.Eflags & IA32_EFLAG_CF) != 0)) {
-
-        Status = EFI_DEVICE_ERROR;
-        goto PcatResetDiskEnd;
-    }
-
-    Status = EFI_SUCCESS;
-
-PcatResetDiskEnd:
-    EfipDestroyBiosCallContext(&RealModeContext);
-    return Status;
+    return EFI_UNSUPPORTED;
 }
 

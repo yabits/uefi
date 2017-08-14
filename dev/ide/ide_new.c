@@ -20,15 +20,12 @@
 
 #include <fs.h>
 #include <endian.h>
-#include "ide_new.h"
-#include "hdreg.h"
+#include "dev/ide_new.h"
+#include "dev/hdreg.h"
 
-#if IS_ENABLED(CONFIG_SUPPORT_PCI)
+//#if IS_ENABLED(CONFIG_SUPPORT_PCI)
 #include <pci.h>
-#endif
-
-#define DEBUG_THIS CONFIG_DEBUG_IDE
-#include <debug.h>
+//#endif
 
 /*
  * define to 2 for the standard 2 channels only
@@ -58,17 +55,17 @@ static const int ctl_ports[IDE_MAX_CHANNELS] = { 0x3f6, 0x376, 0x3ee, 0x36e };
 #if IS_ENABLED(CONFIG_DEBUG_IDE) && 0
 static void dump_drive(struct ide_drive *drive)
 {
-	debug("IDE DRIVE @%lx:\n", (unsigned long)drive);
-	debug("unit: %d\n",drive->unit);
-	debug("present: %d\n",drive->present);
-	debug("type: %d\n",drive->type);
-	debug("media: %d\n",drive->media);
-	debug("model: %s\n",drive->model);
-	debug("nr: %d\n",drive->nr);
-	debug("cyl: %d\n",drive->cyl);
-	debug("head: %d\n",drive->head);
-	debug("sect: %d\n",drive->sect);
-	debug("bs: %d\n",drive->bs);
+	printf("IDE DRIVE @%lx:\n", (unsigned long)drive);
+	printf("unit: %d\n",drive->unit);
+	printf("present: %d\n",drive->present);
+	printf("type: %d\n",drive->type);
+	printf("media: %d\n",drive->media);
+	printf("model: %s\n",drive->model);
+	printf("nr: %d\n",drive->nr);
+	printf("cyl: %d\n",drive->cyl);
+	printf("head: %d\n",drive->head);
+	printf("sect: %d\n",drive->sect);
+	printf("bs: %d\n",drive->bs);
 }
 #endif
 
@@ -123,7 +120,7 @@ ob_ide_pio_insw(struct ide_drive *drive, unsigned int offset,
 	struct ide_channel *chan = drive->channel;
 
 	if (len & 1) {
-		debug("hd%c: command not word aligned\n", drive->nr + 'a');
+		printf("hd%c: command not word aligned\n", drive->nr + 'a');
 		return;
 	}
 
@@ -137,7 +134,7 @@ ob_ide_pio_outsw(struct ide_drive *drive, unsigned int offset,
 	struct ide_channel *chan = drive->channel;
 
 	if (len & 1) {
-		debug("hd%c: command not word aligned\n", drive->nr + 'a');
+		printf("hd%c: command not word aligned\n", drive->nr + 'a');
 		return;
 	}
 
@@ -164,15 +161,15 @@ ob_ide_error(struct ide_drive *drive, unsigned char stat, char *msg)
 	if (!stat)
 		stat = ob_ide_pio_readb(drive, IDEREG_STATUS);
 
-	debug("ob_ide_error ");
+	printf("ob_ide_error ");
 	printf("hd%c: %s:\n", drive->nr + 'a', msg);
-	debug("    cmd=%x, stat=%x", chan->ata_cmd.command, stat);
+	printf("    cmd=%x, stat=%x", chan->ata_cmd.command, stat);
 
 	if ((stat & (BUSY_STAT | ERR_STAT)) == ERR_STAT) {
 		err = ob_ide_pio_readb(drive, IDEREG_ERROR);
-		debug(", err=%x", err);
+		printf(", err=%x", err);
 	}
-	debug("\n");
+	printf("\n");
 
 	/*
 	 * see if sense is valid and dump that
@@ -184,21 +181,21 @@ ob_ide_error(struct ide_drive *drive, unsigned char stat, char *msg)
 		if (cmd->cdb[0] == ATAPI_REQ_SENSE) {
 			old_cdb = cmd->old_cdb;
 
-			debug("    atapi opcode=%02x", old_cdb);
+			printf("    atapi opcode=%02x", old_cdb);
 		} else {
 			int i;
 
-			debug("    cdb: ");
+			printf("    cdb: ");
 			for (i = 0; i < sizeof(cmd->cdb); i++)
-				debug("%02x ", cmd->cdb[i]);
+				printf("%02x ", cmd->cdb[i]);
 		}
 		if (cmd->sense)
-			debug(", sense: %02x/%02x/%02x",
+			printf(", sense: %02x/%02x/%02x",
 					cmd->sense->sense_key,
 					cmd->sense->asc, cmd->sense->ascq);
 		else
-			debug(", no sense");
-		debug("\n");
+			printf(", no sense");
+		printf("\n");
 	}
 }
 
@@ -241,7 +238,7 @@ ob_ide_select_drive(struct ide_drive *drive)
 	unsigned char control = IDEHEAD_DEV0;
 
 	if (ob_ide_wait_stat(drive, 0, BUSY_STAT, NULL)) {
-		debug("select_drive: timed out\n");
+		printf("select_drive: timed out\n");
 		return 1;
 	}
 
@@ -259,7 +256,7 @@ ob_ide_select_drive(struct ide_drive *drive)
 	ob_ide_400ns_delay(drive);
 
 	if (ob_ide_wait_stat(drive, 0, BUSY_STAT, NULL)) {
-		debug("select_drive: timed out\n");
+		printf("select_drive: timed out\n");
 		return 1;
 	}
 
@@ -405,7 +402,7 @@ ob_ide_pio_data_in(struct ide_drive *drive, struct ata_command *cmd)
 	} while (bytes);
 
 	if (bytes)
-		debug("bytes=%d, stat=%x\n", bytes, stat);
+		printf("bytes=%d, stat=%x\n", bytes, stat);
 
 	return bytes ? 1 : 0;
 }
@@ -425,7 +422,7 @@ ob_ide_pio_packet(struct ide_drive *drive, struct atapi_command *cmd)
 		return 1;
 
 	if (cmd->buflen && cmd->data_direction == atapi_ddir_none)
-		debug("non-zero buflen but no data direction\n");
+		printf("non-zero buflen but no data direction\n");
 
 	memset(acmd, 0, sizeof(*acmd));
 	acmd->lcyl = cmd->buflen & 0xff;
@@ -457,7 +454,7 @@ ob_ide_pio_packet(struct ide_drive *drive, struct atapi_command *cmd)
 		 * we are doing a sense, ERR_STAT == CHECK_CONDITION
 		 */
 		if (cmd->cdb[0] != ATAPI_REQ_SENSE) {
-			debug("odd, drive didn't want to transfer %x\n", stat);
+			printf("odd, drive didn't want to transfer %x\n", stat);
 			return 1;
 		}
 	}
@@ -526,7 +523,7 @@ ob_ide_pio_packet(struct ide_drive *drive, struct atapi_command *cmd)
 		(void) ob_ide_wait_stat(drive, 0, BUSY_STAT, &stat);
 
 	if (bytes)
-		debug("cdb failed, bytes=%d, stat=%x\n", bytes, stat);
+		printf("cdb failed, bytes=%d, stat=%x\n", bytes, stat);
 
 	return (stat & ERR_STAT) || bytes;
 }
@@ -694,7 +691,7 @@ ob_ide_read_atapi(struct ide_drive *drive, unsigned long long block, unsigned ch
 
 	if (drive->bs == 2048) {
 		if (((block & 3) != 0) || ((sectors & 3) != 0)) {
-			debug("ob_ide_read_atapi: unaligned atapi access: %x blocks, starting from %x\n", sectors, block);
+			printf("ob_ide_read_atapi: unaligned atapi access: %x blocks, starting from %x\n", sectors, block);
 		}
 		block >>= 2;
 		sectors >>= 2;
@@ -841,7 +838,7 @@ ob_ide_read_sectors(struct ide_drive *drive, unsigned long long block,
 	if (block + sectors > (drive->sectors * (drive->bs / 512)))
 		return 1;
 
-	debug("ob_ide_read_sectors: block=%ld sectors=%u\n", (unsigned long) block, sectors);
+	printf("ob_ide_read_sectors: block=%ld sectors=%u\n", (unsigned long) block, sectors);
 
 	if (drive->type == ide_type_ata)
 		return ob_ide_read_ata(drive, block, buf, sectors);
@@ -909,7 +906,7 @@ ob_ide_identify_drive(struct ide_drive *drive)
 	else if (drive->type == ide_type_atapi)
 		cmd->command = WIN_IDENTIFY_PACKET;
 	else {
-		debug("%s: called with bad device type %d\n", __FUNCTION__, drive->type);
+		printf("%s: called with bad device type %d\n", __FUNCTION__, drive->type);
 		return 1;
 	}
 
@@ -1134,11 +1131,11 @@ ob_ide_read_blocks(struct ide_drive *drive, int n, u32 blk, unsigned char* dest)
 		if (len > drive->max_sectors)
 			len = drive->max_sectors;
 
-		debug("reading %d sectors from blk %d\n",len, blk);
+		printf("reading %d sectors from blk %d\n",len, blk);
 		if (ob_ide_read_sectors(drive, blk, dest, len)) {
 			return n-1;
 		}
-		debug("done\n");
+		printf("done\n");
 
 		dest += len * drive->bs;
 		n -= len;
@@ -1148,7 +1145,7 @@ ob_ide_read_blocks(struct ide_drive *drive, int n, u32 blk, unsigned char* dest)
 	return (cnt);
 }
 
-#if IS_ENABLED(CONFIG_SUPPORT_PCI)
+//#if IS_ENABLED(CONFIG_SUPPORT_PCI)
 static int pci_find_ata_device_on_bus(int bus, pcidev_t * dev, int *index, int sata, int pata)
 {
 	int slot, func;
@@ -1169,12 +1166,12 @@ static int pci_find_ata_device_on_bus(int bus, pcidev_t * dev, int *index, int s
 			// skip TI bridges on Rocky (ac8f) and Getac (803b)
 			// There must be a better way to do this...
 			if (val == 0xac8f104c || val == 0x803b104c) {
-				debug("Skipping TI bridge\n");
+				printf("Skipping TI bridge\n");
 				continue;
 			}
 
 			class = pci_read_config16(currdev, 0x0a);
-			debug("%02x:%02x.%02x [%04x:%04x] class %04x\n",
+			printf("%02x:%02x.%02x [%04x:%04x] class %04x\n",
 				bus, slot, func, val & 0xffff, val >> 16, class);
 
 			if ((sata && class == 0x180) || (pata && class == 0x101)) {
@@ -1191,7 +1188,7 @@ static int pci_find_ata_device_on_bus(int bus, pcidev_t * dev, int *index, int s
 				unsigned int new_bus;
 				new_bus = (pci_read_config32(currdev, REG_PRIMARY_BUS) >> 8) & 0xff;
 				if (new_bus == 0) {
-					debug("Misconfigured bridge at %02x:%02x.%02x skipped.\n",
+					printf("Misconfigured bridge at %02x:%02x.%02x skipped.\n",
 						bus, slot, func);
 					continue;
 				}
@@ -1206,10 +1203,10 @@ static int pci_find_ata_device_on_bus(int bus, pcidev_t * dev, int *index, int s
 
 int pci_find_ata_device(pcidev_t *dev, int *index, int sata, int pata)
 {
-	debug(" Scanning for:%s%s\n", sata?" SATA":"", pata?" PATA":"");
+	printf(" Scanning for:%s%s\n", sata?" SATA":"", pata?" PATA":"");
 	return pci_find_ata_device_on_bus(0, dev, index, sata, pata);
 }
-#endif
+//#endif
 
 
 static void fixupregs(struct ide_channel *chan)
@@ -1222,13 +1219,13 @@ static void fixupregs(struct ide_channel *chan)
 
 static int find_ide_controller_compat(struct ide_channel *chan, int index)
 {
-#if IS_ENABLED(CONFIG_SUPPORT_PCI)
+//#if IS_ENABLED(CONFIG_SUPPORT_PCI)
 	int skip, i, pci_index = index / 2;
 	pcidev_t dev;
-#else
-	if (index >= IDE_MAX_CHANNELS)
-		return -1;
-#endif
+//#else
+//	if (index >= IDE_MAX_CHANNELS)
+//		return -1;
+//#endif
 #if IS_ENABLED(CONFIG_PCMCIA_CF)
 	if (index == 2) {
 		chan->io_regs[0] = 0x1e0;
@@ -1237,7 +1234,7 @@ static int find_ide_controller_compat(struct ide_channel *chan, int index)
 		return 0;
 	}
 #endif
-#if IS_ENABLED(CONFIG_SUPPORT_PCI)
+//#if IS_ENABLED(CONFIG_SUPPORT_PCI)
 	/* skip any SATA and PATA PCI controllers in native mode */
 	for (skip = i = 0; i < pci_index && index; i++) {
 		int devidx = i;
@@ -1258,17 +1255,17 @@ static int find_ide_controller_compat(struct ide_channel *chan, int index)
 			skip++;
 	}
 	index = skip <= index ? index - skip : 0;
-	debug("skipping %d native PCI controllers, new index=%d\n", skip, index);
+	printf("skipping %d native PCI controllers, new index=%d\n", skip, index);
 	if (index >= IDE_MAX_CHANNELS)
 		return -1;
-#endif
+//#endif
 	chan->io_regs[0] = io_ports[index];
 	chan->io_regs[8] = ctl_ports[index];
 	fixupregs(chan);
 	return 0;
 }
 
-#if IS_ENABLED(CONFIG_SUPPORT_PCI)
+//#if IS_ENABLED(CONFIG_SUPPORT_PCI)
 static int find_ide_controller(struct ide_channel *chan, int chan_index)
 {
 	int pci_index;
@@ -1285,7 +1282,7 @@ static int find_ide_controller(struct ide_channel *chan, int chan_index)
 	if (!pci_find_ata_device(&dev, &pci_index, 1, 0)) { // S-ATA first
 		pci_index = chan_index >> 1;
 		if (!pci_find_ata_device(&dev, &pci_index, 0, 1)) { // P-ATA second
-			debug("PCI IDE #%d not found\n", chan_index >> 1);
+			printf("PCI IDE #%d not found\n", chan_index >> 1);
 			return -1;
 		}
 	}
@@ -1295,14 +1292,14 @@ static int find_ide_controller(struct ide_channel *chan, int chan_index)
 	prog_if = pci_read_config8(dev, 9);
 	devclass = pci_read_config16(dev, 0x0a);
 
-	debug("found PCI IDE controller %04x:%04x prog_if=%#x\n",
+	printf("found PCI IDE controller %04x:%04x prog_if=%#x\n",
 			vendor, device, prog_if);
 
 	/* See how this controller is configured */
 	mask = (chan_index & 1) ? 4 : 1;
-	debug("%s channel: ", (chan_index & 1) ? "secondary" : "primary");
+	printf("%s channel: ", (chan_index & 1) ? "secondary" : "primary");
 	if ((prog_if & mask) || (devclass != 0x0101)) {
-		debug("native PCI mode\n");
+		printf("native PCI mode\n");
 		if ((chan_index & 1) == 0) {
 			/* Primary channel */
 			chan->io_regs[0] = pci_read_resource(dev, 0); // io ports
@@ -1316,15 +1313,15 @@ static int find_ide_controller(struct ide_channel *chan, int chan_index)
 		chan->io_regs[8] &= ~3;
 		fixupregs(chan);
 	} else {
-		debug("compatibility mode\n");
+		printf("compatibility mode\n");
 		if (find_ide_controller_compat(chan, chan_index) != 0)
 			return -1;
 	}
 	return 0;
 }
-#else /* !CONFIG_SUPPORT_PCI */
-# define find_ide_controller find_ide_controller_compat
-#endif
+//#else /* !CONFIG_SUPPORT_PCI */
+//# define find_ide_controller find_ide_controller_compat
+//#endif
 int ob_ide_init(int driveno)
 {
 	int j;
@@ -1333,7 +1330,7 @@ int ob_ide_init(int driveno)
 	int chan_index;
 
 	if (driveno >= IDE_MAX_DRIVES) {
-		debug("Unsupported drive number\n");
+		printf("Unsupported drive number\n");
 		return -1;
 	}
 
