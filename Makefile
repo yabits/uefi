@@ -126,7 +126,7 @@ CPPFLAGS := -nostdinc -imacros $(obj)/config.h
 CPPFLAGS += -I$(INCPAYLOAD) -I$(INCPAYLOAD)/$(ARCHDIR-y)
 CPPFLAGS += -Iinclude -I$(obj)
 CPPFLAGS += -I$(GCCINCDIR) -include $(INCPAYLOAD)/kconfig.h
-CPPFLAGS += -Icore -I../include
+CPPFLAGS += -Icore
 
 CFLAGS := -Wall -Wshadow -O0 -g -pipe
 CFLAGS += -fomit-frame-pointer -fno-common -ffreestanding -fno-strict-aliasing
