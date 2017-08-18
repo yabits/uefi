@@ -1,5 +1,6 @@
 # yabits/uefi
-A minoca based UEFI coreboot payload 
+
+A minoca based UEFI coreboot payload (WIP)
 
 [yabits/uefi](https://github.com/yabits/uefi) is an UEFI coreboot payload.
 The code is based on the part of [Minoca OS](https://github.com/minoca/os).
@@ -9,7 +10,6 @@ This project is trying to port the code base to coreboot as a payload.
 Our goal is running Linux, \*BSDs and other bootloaders from this firmware.
 
 ## Building
-
 
 Before building, clone
 [coreboot](http://review.coreboot.org/p/coreboot)
