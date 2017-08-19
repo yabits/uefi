@@ -216,7 +216,7 @@ EFI_BOOT_SERVICES EfiBootServicesTemplate = {
     EfiCoreLocateProtocol,
     EfiCoreInstallMultipleProtocolInterfaces,
     EfiCoreUninstallMultipleProtocolInterfaces,
-    (EFI_CALCULATE_CRC32)EfiCoreNotYetAvailable3,
+    EfiCoreCalculateCrc32,
     EfiCoreCopyMemory,
     EfiCoreSetMemory,
     EfiCoreCreateEventEx
