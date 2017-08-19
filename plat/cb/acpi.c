@@ -345,9 +345,12 @@ Return Value:
             GoodChecksum = EfipPcatChecksumTable(CurrentAddress,
                                                  RSDP_CHECKSUM_SIZE);
 
+            /*
             if (GoodChecksum != FALSE) {
                 return CurrentAddress;
             }
+            */
+            return CurrentAddress;
         }
 
         //
