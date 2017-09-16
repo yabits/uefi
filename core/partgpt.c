@@ -45,6 +45,11 @@ Environment:
 // ----------------------------------------------- Internal Function Prototypes
 //
 
+VOID
+PrintGUID (
+    EFI_GUID *GUID
+    );
+
 BOOLEAN
 EfipPartitionValidGptTable (
     EFI_BLOCK_IO_PROTOCOL *BlockIo,
@@ -383,6 +388,17 @@ PartitionDetectGptEnd:
 // --------------------------------------------------------- Internal Functions
 //
 
+VOID
+PrintGUID (
+    EFI_GUID *id
+    )
+{
+    printf("%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX",
+        id->Data1, id->Data2, id->Data3,
+        id->Data4[0], id->Data4[1], id->Data4[2], id->Data4[3],
+        id->Data4[4], id->Data4[5], id->Data4[6], id->Data4[7]);
+}
+
 BOOLEAN
 EfipPartitionValidGptTable (
     EFI_BLOCK_IO_PROTOCOL *BlockIo,
@@ -442,6 +458,10 @@ Return Value:
         EfiFreePool(Header);
         return FALSE;
     }
+
+    printf("DiskGUID: ");
+    PrintGUID(&Header->DiskGuid);
+    printf("\n");
 
     if ((Header->Header.Signature != EFI_GPT_HEADER_SIGNATURE) ||
         (EfipPartitionCheckCrc(BlockSize, &(Header->Header)) == FALSE) ||
@@ -638,6 +658,14 @@ Return Value:
         if (Match != FALSE) {
             continue;
         }
+
+        printf("Entry %d PartitionTypeGUID:", EntryIndex);
+        PrintGUID(&Entry->PartitionTypeGuid);
+        printf("\n");
+
+        printf("Entry %d UniquePartitionGUID:", EntryIndex);
+        PrintGUID(&Entry->UniquePartitionGuid);
+        printf("\n");
 
         StartingLba = Entry->StartingLba;
         EndingLba = Entry->EndingLba;
