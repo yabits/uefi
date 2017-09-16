@@ -38,7 +38,7 @@ Environment:
 // ---------------------------------------------------------------- Definitions
 //
 
-#define FIRMWARE_IMAGE_NAME "biosfw"
+#define FIRMWARE_IMAGE_NAME "cbfw"
 
 //
 // ------------------------------------------------------ Data Type Definitions
