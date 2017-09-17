@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include dev/ide/Makefile.inc
-include dev/ahci/Makefile.inc
+TARGETS-y += lib/blockdev/list.o
+
