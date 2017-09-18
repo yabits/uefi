@@ -74,7 +74,8 @@ extern VOID *EfiRsdpPointer;
 
 VOID *
 EfipPcatFindRsdp (
-    VOID
+    VOID *,
+    UINT64
     );
 
 /*++
@@ -100,7 +101,8 @@ Return Value:
 
 EFI_STATUS
 EfipPcatInstallRsdp (
-    VOID
+    VOID *,
+    UINT64
     );
 
 /*++
@@ -121,7 +123,8 @@ Return Value:
 
 EFI_STATUS
 EfipPcatInstallSmbios (
-    VOID
+    VOID *,
+    UINT64
     );
 
 /*++

@@ -34,6 +34,7 @@ Environment:
 #include <minoca/fw/acpitabs.h>
 #include <minoca/fw/smbios.h>
 #include <uefifw.h>
+#include "cbfw.h"
 
 //
 // ---------------------------------------------------------------- Definitions

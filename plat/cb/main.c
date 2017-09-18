@@ -35,6 +35,7 @@ Environment:
 #include <assert.h>
 #include <pci.h>
 #include <pci/pci.h>
+#include "cbfw.h"
 
 //
 // ---------------------------------------------------------------- Definitions
