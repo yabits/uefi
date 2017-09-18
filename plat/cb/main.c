@@ -33,6 +33,8 @@ Environment:
 #include <uefifw.h>
 #include <libpayload.h>
 #include <assert.h>
+#include <pci.h>
+#include <pci/pci.h>
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -48,9 +50,14 @@ Environment:
 // ----------------------------------------------- Internal Function Prototypes
 //
 
+int pci_init_common(void);
+struct pci_dev *pci_dev_find_class(uint8_t, uint8_t);
+
 //
 // -------------------------------------------------------------------- Globals
 //
+
+struct pci_access *pacc;
 
 //
 // Variables defined in the linker script that mark the start and end of the
@@ -148,6 +155,11 @@ Return Value:
         if (EFI_ERROR(Status)) {
             return Status;
         }
+
+        Status = pci_init_common();
+        if (Status) {
+            return Status;
+        }
     }
 
     return Status;
@@ -192,3 +204,30 @@ Return Value:
 // --------------------------------------------------------- Internal Functions
 //
 
+int pci_init_common(void)
+{
+    pacc = pci_alloc();
+    if (!pacc) {
+        printf("pci_alloc() failed\n");
+        return -1;
+    }
+
+    pci_init(pacc);
+    pci_scan_bus(pacc);
+
+    return 0;
+}
+
+struct pci_dev *pci_dev_find_class(uint8_t class, uint8_t sub)
+{
+    struct pci_dev *tmp;
+    uint16_t devclass;
+
+    for (tmp = pacc->devices; tmp; tmp = tmp->next) {
+        devclass = pci_read_word(tmp, 0xa);
+        if (devclass == (class << 8) + sub)
+            return tmp;
+    }
+
+    return NULL;
+}
