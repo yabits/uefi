@@ -33,7 +33,7 @@ Environment:
 #include <minoca/fw/acpitabs.h>
 #include <uefifw.h>
 #include <minoca/uefi/guid/acpi.h>
-#include "../biosfw.h"
+#include "../cbfw.h"
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -75,8 +75,8 @@ EfipPcatCompareGuids (
 // Define these GUIDs in the runtime driver.
 //
 
-EFI_GUID EfiAcpiTable1Guid = EFI_ACPI_10_TABLE_GUID;
-EFI_GUID EfiAcpiTableGuid = EFI_ACPI_20_TABLE_GUID;
+extern EFI_GUID EfiAcpiTable1Guid;
+extern EFI_GUID EfiAcpiTableGuid;
 
 //
 // Define the ACPI reset mechanism parameters.

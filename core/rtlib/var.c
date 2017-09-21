@@ -224,7 +224,7 @@ BOOLEAN EfiVariablesChanged = FALSE;
 // Store the single instance of the variable backend protocol.
 //
 
-EFI_GUID EfiVariableBackendProtocolGuid = EFI_VARIABLE_BACKEND_PROTOCOL_GUID;
+extern EFI_GUID EfiVariableBackendProtocolGuid;
 
 EFI_VARIABLE_BACKEND_PROTOCOL EfiVariableBackendProtocol = {
     EfiVariableBackendSetData,

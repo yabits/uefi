@@ -85,7 +85,7 @@ EfipRuntimeCalculateHeaderCrc (
 // driver.
 //
 
-EFI_RUNTIME_ARCH_PROTOCOL EfiRuntimeProtocol;
+extern EFI_RUNTIME_ARCH_PROTOCOL EfiRuntimeProtocol;
 
 //
 // These globals are used while switching from physical to virtual mode.
@@ -107,12 +107,12 @@ EFI_HANDLE EfiRuntimeHandle;
 
 VOID *EfiRuntimeImageBase;
 
-EFI_GUID EfiLoadedImageProtocolGuid = EFI_LOADED_IMAGE_PROTOCOL_GUID;
-EFI_GUID EfiRuntimeArchProtocolGuid = EFI_RUNTIME_ARCH_PROTOCOL_GUID;
+extern EFI_GUID EfiLoadedImageProtocolGuid;
+extern EFI_GUID EfiRuntimeArchProtocolGuid;
 
-EFI_BOOT_SERVICES *EfiBootServices;
-EFI_RUNTIME_SERVICES *EfiRuntimeServices;
-EFI_SYSTEM_TABLE *EfiSystemTable;
+extern EFI_BOOT_SERVICES *EfiBootServices;
+extern EFI_RUNTIME_SERVICES *EfiRuntimeServices;
+extern EFI_SYSTEM_TABLE *EfiSystemTable;
 
 //
 // ------------------------------------------------------------------ Functions

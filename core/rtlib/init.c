@@ -84,9 +84,9 @@ EfipStubQueryCapsuleCapabilities (
 // -------------------------------------------------------------------- Globals
 //
 
-EFI_SYSTEM_TABLE *EfiSystemTable;
-EFI_BOOT_SERVICES *EfiBootServices;
-EFI_RUNTIME_SERVICES *EfiRuntimeServices;
+extern EFI_SYSTEM_TABLE *EfiSystemTable;
+extern EFI_BOOT_SERVICES *EfiBootServices;
+extern EFI_RUNTIME_SERVICES *EfiRuntimeServices;
 EFI_HANDLE EfiRuntimeImageHandle;
 
 //
@@ -510,10 +510,12 @@ Return Value:
     return;
 }
 
+/*
 VOID
 RtlDebugBreak (
     VOID
     )
+*/
 
 /*++
 
@@ -531,8 +533,10 @@ Return Value:
 
 --*/
 
+/*
 {
 
     return;
 }
+*/
 

@@ -16,8 +16,8 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-# include core/rtlib/Makefile.inc
-# include core/runtime/Makefile.inc
+include core/rtlib/Makefile.inc
+include core/runtime/Makefile.inc
 include core/x86/Makefile.inc
 
 TARGETS-y += core/acpi.o core/acpitabs.o

@@ -551,10 +551,12 @@ Return Value:
     //
 
     Step += 1;
-    //EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
+    EfiStatus = EfiPlatformEnumerateFirmwareVolumes();
     if (EFI_ERROR(EfiStatus)) {
         goto InitializeEnd;
     }
+
+    EfiStatus = EfiRuntimeCoreEntry(NULL, EfiSystemTable);
 
     EfiCoreInitializeDispatcher();
     EfiCoreDispatcher();

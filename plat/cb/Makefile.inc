@@ -16,8 +16,9 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-y += plat/cb/acpi.o
+TARGETS-y += plat/cb/acpi.o plat/cb/fwvol.o
 TARGETS-y += plat/cb/main.o plat/cb/memmap.o
 TARGETS-y += plat/cb/timer.o plat/cb/disk.o
+TARGETS-y += plat/cb/runtime/runtime.o plat/cb/runtime/reboot.o
 # TARGETS-y += plat/cb/disk.o plat/cb/video.o
 

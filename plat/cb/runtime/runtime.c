@@ -30,8 +30,9 @@ Environment:
 // ------------------------------------------------------------------- Includes
 //
 
+#include <libpayload.h>
 #include <uefifw.h>
-#include "../biosfw.h"
+#include "../cbfw.h"
 
 //
 // ---------------------------------------------------------------- Definitions
@@ -297,8 +298,25 @@ Return Value:
 --*/
 
 {
+    struct tm time;
 
-    return EFI_UNSUPPORTED;
+    rtc_read_clock(&time);
+
+    Time->Year = time.tm_year + 1900;
+    Time->Month = time.tm_mon + 1;
+    Time->Day = time.tm_mday;
+    Time->Hour = time.tm_hour;
+    Time->Minute = time.tm_min;
+    Time->Second = time.tm_sec;
+    Time->Nanosecond = 0;
+    Time->TimeZone = 0;
+    Time->Daylight = (UINT8)time.tm_isdst;
+
+    Capabilities->Resolution = 1;
+    Capabilities->Accuracy = 50;
+    Capabilities->SetsToZero = FALSE;
+
+    return EFI_SUCCESS;
 }
 
 EFIAPI
