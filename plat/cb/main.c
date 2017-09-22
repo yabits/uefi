@@ -52,7 +52,6 @@ Environment:
 //
 
 int pci_init_common(void);
-struct pci_dev *pci_dev_find_class(uint8_t, uint8_t);
 
 //
 // -------------------------------------------------------------------- Globals
@@ -219,16 +218,3 @@ int pci_init_common(void)
     return 0;
 }
 
-struct pci_dev *pci_dev_find_class(uint8_t class, uint8_t sub)
-{
-    struct pci_dev *tmp;
-    uint16_t devclass;
-
-    for (tmp = pacc->devices; tmp; tmp = tmp->next) {
-        devclass = pci_read_word(tmp, 0xa);
-        if (devclass == (class << 8) + sub)
-            return tmp;
-    }
-
-    return NULL;
-}

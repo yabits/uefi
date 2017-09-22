@@ -32,6 +32,10 @@ Environment:
 #include <uefifw.h>
 #include <minoca/uefi/protocol/blockio.h>
 #include <fs.h>
+#include <pci.h>
+#include <pci/pci.h>
+#include <dev/ahci.h>
+#include <blockdev/blockdev.h>
 
 //
 // --------------------------------------------------------------------- Macros
@@ -149,6 +153,12 @@ typedef struct _EFI_PCAT_DISK_DEVICE_PATH {
     EFI_DEVICE_PATH_PROTOCOL End;
 } PACKED EFI_PCAT_DISK_DEVICE_PATH, *PEFI_PCAT_DISK_DEVICE_PATH;
 
+typedef struct {
+    BlockDev *known_devices[32];
+    int curr_device;
+    int total;
+} storage_devices;
+
 //
 // ----------------------------------------------- Internal Function Prototypes
 //
@@ -212,6 +222,16 @@ EfipPcatResetDisk (
     UINT8 DriveNumber
     );
 
+struct pci_dev *
+pci_dev_find_class(
+    uint8_t,
+    uint8_t
+    );
+
+int storage_show(
+    void
+    );
+
 //
 // -------------------------------------------------------------------- Globals
 //
@@ -263,6 +283,10 @@ EFI_PCAT_DISK_DEVICE_PATH EfiPcatDevicePathTemplate = {
     }
 };
 
+extern struct pci_access *pacc;
+
+static storage_devices current_devices;
+
 //
 // ------------------------------------------------------------------ Functions
 //
@@ -289,21 +313,53 @@ Return Value:
 --*/
 
 {
+    struct pci_dev *dev;
+    AhciCtrlr *ahci;
+    BlockDev *bd;
+    int i, count;
 
-    UINTN DriveIndex;
-    EFI_STATUS Status;
+    dev = pci_dev_find_class(0x01, 0x06);
+    ahci = new_ahci_ctrlr(PCI_DEV(dev->bus, dev->dev, dev->func));
+    list_insert_after(&ahci->ctrlr.list_node, &fixed_block_dev_controllers);
 
-    for (DriveIndex = 0;
-         DriveIndex < 8;
-         DriveIndex += 1) {
+    const ListNode *controllers[] = {
+        &fixed_block_dev_controllers,
+        &removable_block_dev_controllers,
+    };
 
-        Status = EfipPcatProbeDrive(DriveIndex);
-        if (EFI_ERROR(Status)) {
-            break;
+    const ListNode *devices[] = {
+        &fixed_block_devices,
+        &removable_block_devices,
+    };
+
+    for (i = 0; i < ARRAY_SIZE(controllers); i++) {
+        for (const ListNode *node = controllers[i]->next;
+                node;
+                node = node->next) {
+            BlockDevCtrlr *bdc;
+
+            bdc = container_of(node, BlockDevCtrlr, list_node);
+            if (bdc->ops.update && bdc->need_update)
+                bdc->ops.update(&bdc->ops);
+            count += 1;
         }
     }
 
-    return EFI_SUCCESS;
+    for (count = i = 0; i < ARRAY_SIZE(devices); i++) {
+        for (const ListNode *node = devices[i]->next;
+                node;
+                node = node->next) {
+            bd = container_of(node, BlockDev, list_node);
+            current_devices.known_devices[count] = bd;
+            EfipPcatProbeDrive(count);
+            count += 1;
+        }
+    }
+
+    current_devices.total = count;
+    current_devices.curr_device = 0;
+
+    return storage_show();
 }
 
 //
@@ -585,20 +641,20 @@ Return Value:
 
 {
 
+    BlockDev *CurrentDev;
     PEFI_PCAT_DISK_DEVICE_PATH DevicePath;
     PEFI_PCAT_DISK Disk;
     UINT64 SectorCount;
     UINT32 SectorSize;
     EFI_STATUS Status;
 
-    Status = ide_probe_verbose(DriveNumber);
-    if (Status != 0) {
+    CurrentDev = current_devices.known_devices[DriveNumber];
+    if (!CurrentDev) {
         return EFI_NOT_FOUND;
     }
 
-    // Really dirty hack
-    SectorSize = 2048;
-    SectorCount = 0xffffffffffffffff;
+    SectorSize = CurrentDev->block_size;
+    SectorCount = CurrentDev->block_count;
 
     //
     // There's a disk there. Allocate a data structure for it.
@@ -618,7 +674,7 @@ Return Value:
     Disk->SectorSize = SectorSize;
     Disk->TotalSectors = SectorCount;
     Disk->BlockIo.Media = &(Disk->Media);
-    if (DriveNumber < EFI_PCAT_HARD_DRIVE_START) {
+    if (CurrentDev->removable) {
         Disk->Media.RemovableMedia = TRUE;
     }
 
@@ -692,14 +748,21 @@ Return Value:
 
 {
 
+    BlockDev *bd;
     EFI_STATUS Status;
 
-    if (Write != FALSE) {
-        return EFI_UNSUPPORTED;
+    bd = current_devices.known_devices[Disk->DriveNumber];
+    if (!bd) {
+        return EFI_DEVICE_ERROR;
     }
 
-    Status = ide_read_blocks(Disk->DriveNumber, AbsoluteSector, SectorCount, Buffer);
-    if (Status != 0) {
+    if (Write != FALSE) {
+        Status = bd->ops.write(&bd->ops, AbsoluteSector, SectorCount, Buffer);
+    } else {
+        Status = bd->ops.read(&bd->ops, AbsoluteSector, SectorCount, Buffer);
+    }
+
+    if (EFI_ERROR(Status)) {
         return EFI_DEVICE_ERROR;
     }
 
@@ -742,3 +805,32 @@ Return Value:
     return EFI_UNSUPPORTED;
 }
 
+struct pci_dev *pci_dev_find_class(uint8_t class, uint8_t sub)
+{
+    struct pci_dev *tmp;
+    uint16_t devclass;
+
+    for (tmp = pacc->devices; tmp; tmp = tmp->next) {
+        devclass = pci_read_word(tmp, 0xa);
+        if (devclass == (class << 8) + sub)
+            return tmp;
+    }
+
+    return NULL;
+}
+
+int storage_show(void)
+{
+    int i;
+    BlockDev **bd;
+
+    for (i = 0, bd = current_devices.known_devices;
+            i < current_devices.total;
+            i++, bd++)
+        printf("%c %2d: %s\n",
+                current_devices.curr_device == i ? '*' : ' ',
+                i, (*bd)->name ? (*bd)->name : "UNNAMED");
+    printf("%d devices total\n", i);
+
+    return 0;
+}
