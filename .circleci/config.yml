@@ -1,0 +1,28 @@
+version: 2
+jobs:
+    build:
+        working_directory: /root
+        docker:
+            - image: retrage/coreboot:4.6
+        steps:
+            - run:
+                name: Setup directories
+                command: |
+                    mkdir -p /home/coreboot/Dropbox/src/minoca/os/
+            - run:
+                name: Clone repositories
+                command: |
+                    git clone --depth 1 -b circleci \
+                    https://github.com/yabits/uefi.git \
+                    ~/Dropbox/src/minoca/os/uefi
+            - run:
+                name: Setup files
+                command: |
+                    cp ~/Dropbox/src/minoca/os/uefi/.circleci/.config \
+                        ~/Dropbox/src/minoca/os/uefi/;
+                    cp ~/Dropbox/src/minoca/os/uefi/.circleci/lib.config \
+                        ~/Dropbox/src/minoca/os/uefi/;
+            - run:
+                name: Build yabits/uefi
+                command: |
+                    make -C ~/Dropbox/src/minoca/os/uefi
