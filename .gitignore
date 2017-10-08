@@ -1,7 +1,3 @@
-.config
-.config.old
 .xcompile
-lib.config
-lib.config.old
 build/*
 *.o
