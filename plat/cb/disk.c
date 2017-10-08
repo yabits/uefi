@@ -56,19 +56,9 @@ Environment:
 
 #define EFI_PCAT_DISK_MAGIC 0x73446350 // 'sDcP'
 
-//
-// Define the drive numbers to probe.
-//
-
-#define EFI_PCAT_HARD_DRIVE_START 0x80
-#define EFI_PCAT_HARD_DRIVE_COUNT 0x10
-
-#define EFI_PCAT_REMOVABLE_DRIVE_START 0x00
-#define EFI_PCAT_REMOVABLE_DRIVE_COUNT 0x10
-
 #define EFI_PCAT_MAX_SECTORS_PER_TRANSFER 0x08
 
-#define EFI_BIOS_BLOCK_IO_DEVICE_PATH_GUID                  \
+#define EFI_CB_BLOCK_IO_DEVICE_PATH_GUID                  \
     {                                                       \
         0xCF31FAC5, 0xC24E, 0x11D2,                         \
         {0x85, 0xF3, 0x00, 0xA0, 0xC9, 0x3E, 0xC9, 0x3C}    \
@@ -129,10 +119,10 @@ Members:
 
 --*/
 
-typedef struct _EFI_BIOS_BLOCK_IO_DEVICE_PATH {
+typedef struct _EFI_CB_BLOCK_IO_DEVICE_PATH {
     VENDOR_DEVICE_PATH DevicePath;
     UINT8 DriveNumber;
-} EFI_BIOS_BLOCK_IO_DEVICE_PATH, *PEFI_BIOS_BLOCK_IO_DEVICE_PATH;
+} EFI_CB_BLOCK_IO_DEVICE_PATH, *PEFI_CB_BLOCK_IO_DEVICE_PATH;
 
 /*++
 
@@ -149,7 +139,7 @@ Members:
 --*/
 
 typedef struct _EFI_PCAT_DISK_DEVICE_PATH {
-    EFI_BIOS_BLOCK_IO_DEVICE_PATH Disk;
+    EFI_CB_BLOCK_IO_DEVICE_PATH Disk;
     EFI_DEVICE_PATH_PROTOCOL End;
 } PACKED EFI_PCAT_DISK_DEVICE_PATH, *PEFI_PCAT_DISK_DEVICE_PATH;
 
@@ -267,10 +257,10 @@ EFI_PCAT_DISK_DEVICE_PATH EfiPcatDevicePathTemplate = {
             {
                 HARDWARE_DEVICE_PATH,
                 HW_VENDOR_DP,
-                sizeof(EFI_BIOS_BLOCK_IO_DEVICE_PATH)
+                sizeof(EFI_CB_BLOCK_IO_DEVICE_PATH)
             },
 
-            EFI_BIOS_BLOCK_IO_DEVICE_PATH_GUID,
+            EFI_CB_BLOCK_IO_DEVICE_PATH_GUID,
         },
 
         0xFF
@@ -753,7 +743,7 @@ Return Value:
 
     bd = current_devices.known_devices[Disk->DriveNumber];
     if (!bd) {
-        return EFI_DEVICE_ERROR;
+        return EFI_NOT_FOUND;
     }
 
     if (Write != FALSE) {
