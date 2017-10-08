@@ -26,7 +26,7 @@ export obj := $(src)/build
 export objk := $(src)/build/util/kconfig
 
 ifndef LIBCONFIG_PATH
-LIBCONFIG_PATH := $(src)/../../../coreboot/payloads/libpayload
+LIBCONFIG_PATH := $(src)/../../../../../src/coreboot/payloads/libpayload
 endif
 export LIBCONFIG_PATH
 
