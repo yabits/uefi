@@ -1,4 +1,4 @@
-# yabits/uefi
+# yabits/uefi [![CircleCI](https://circleci.com/gh/yabits/uefi.svg?style=shield)](https://circleci.com/gh/yabits/uefi)
 
 A minoca based UEFI coreboot payload (WIP)
 
