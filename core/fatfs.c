@@ -161,7 +161,7 @@ EfiFatFlush (
 
 CHAR8 *
 EfipFatCopyPath (
-    CHAR16 *InputPath,
+    CHAR8 *InputPath,
     BOOLEAN *StartsAtRoot
     );
 
@@ -2057,7 +2057,7 @@ Return Value:
 
 CHAR8 *
 EfipFatCopyPath (
-    CHAR16 *InputPath,
+    CHAR8 *InputPath,
     BOOLEAN *StartsAtRoot
     )
 
@@ -2086,21 +2086,21 @@ Return Value:
 
 {
 
-    CHAR16 *CurrentInput;
+    CHAR8 *CurrentInput;
     CHAR8 *CurrentOutput;
     UINTN Length;
     CHAR8 *NewPath;
     EFI_STATUS Status;
 
     *StartsAtRoot = FALSE;
-    while (*InputPath == L'\\') {
+    while (*InputPath == '\\') {
         *StartsAtRoot = TRUE;
         InputPath += 1;
     }
 
     CurrentInput = InputPath;
     Length = 2;
-    while (*CurrentInput != L'\0') {
+    while (*CurrentInput != '\0') {
         Length += 1;
         CurrentInput += 1;
     }
@@ -2112,17 +2112,17 @@ Return Value:
 
     CurrentInput = InputPath;
     CurrentOutput = NewPath;
-    while (*CurrentInput != L'\0') {
+    while (*CurrentInput != '\0') {
 
         //
         // If it's a backslash, then terminate the current output and get past
         // the backslash (and any additional consecutive ones).
         //
 
-        if (*CurrentInput == L'\\') {
+        if (*CurrentInput == '\\') {
             *CurrentOutput = '\0';
             CurrentOutput += 1;
-            while (*CurrentInput == L'\\') {
+            while (*CurrentInput == '\\') {
                 CurrentInput += 1;
             }
 
