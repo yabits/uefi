@@ -1380,3 +1380,27 @@ Return Value:
     EFI status code.
 
 --*/
+
+EFIAPI
+EFI_STATUS
+EfiSimpleTextOutputString (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    CHAR16 *String
+    );
+/*++
+
+Routine Description:
+
+    This routine write a string to the output device.
+
+Arguments:
+
+    This - Supplies a pointer to the EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL.
+
+    String - Supplies a pointer to the string.
+
+Return Value:
+
+    EFI status code.
+
+--*/

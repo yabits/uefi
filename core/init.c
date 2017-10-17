@@ -167,6 +167,19 @@ EFI_HANDLE EfiFirmwareImageHandle;
 // Define a template for the EFI services.
 //
 
+EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL EfiSimpleTextOutputProtocolTemplate = {
+    NULL,
+    EfiSimpleTextOutputString,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+};
+
 EFI_BOOT_SERVICES EfiBootServicesTemplate = {
     {
         EFI_BOOT_SERVICES_SIGNATURE,
@@ -252,6 +265,9 @@ EFI_RUNTIME_SERVICES EfiRuntimeServicesTemplate = {
 //
 
 EFI_SYSTEM_TABLE *EfiSystemTable;
+EFI_HANDLE EfiConsoleOutHandle;
+EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *EfiConOut = \
+                                 &EfiSimpleTextOutputProtocolTemplate;
 EFI_BOOT_SERVICES *EfiBootServices = &EfiBootServicesTemplate;
 EFI_RUNTIME_SERVICES *EfiRuntimeServices = &EfiRuntimeServicesTemplate;
 
@@ -466,6 +482,8 @@ Return Value:
     EfiSystemTable->Hdr.Reserved = 0;
     EfiSystemTable->BootServices = EfiBootServices;
     EfiSystemTable->RuntimeServices = EfiRuntimeServices;
+    EfiSystemTable->ConsoleOutHandle = EfiConsoleOutHandle;
+    EfiSystemTable->ConOut = EfiConOut;
 
     //
     // Allow KD to use stall now that timer services are set up.
