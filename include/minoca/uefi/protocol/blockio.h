@@ -271,8 +271,10 @@ typedef struct {
     BOOLEAN LogicalPartition;
     BOOLEAN ReadOnly;
     BOOLEAN WriteCaching;
+    UINT8 Pad[3];
     UINT32 BlockSize;
     UINT32 IoAlign;
+    UINT8 Pad2[4];
     EFI_LBA LastBlock;
     EFI_LBA LowestAlignedLba;
     UINT32 LogicalBlocksPerPhysicalBlock;
