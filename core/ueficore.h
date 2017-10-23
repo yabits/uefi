@@ -1381,9 +1381,67 @@ Return Value:
 
 --*/
 
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputExReset (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    BOOLEAN ExtendedVerification
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputExReadKeyStrokeEx (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    EFI_KEY_DATA *KeyData
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputExSetState (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    EFI_KEY_TOGGLE_STATE *KeyToggleState
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputExRegisterKeyNotify (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    EFI_KEY_DATA *KeyData,
+    EFI_KEY_NOTIFY_FUNCTION KeyNotificationFunction,
+    VOID **NotifyHandle
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputExUnregisterKeyNotify (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    VOID *NotificationHandle
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputReset (
+    EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
+    BOOLEAN ExtendedVerification
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextInputReadKeyStroke (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    EFI_INPUT_KEY *Key
+    );
+
 EFIAPI
 EFI_STATUS
-EfiSimpleTextOutputString (
+EfiSimpleTextOutputReset (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    BOOLEAN ExtendedVerification
+    );
+
+EFIAPI
+EFI_STATUS
+EfiSimpleTextOutputOutputString (
     EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
     CHAR16 *String
     );
@@ -1404,3 +1462,54 @@ Return Value:
     EFI status code.
 
 --*/
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputTestString (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    CHAR *String
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputQueryMode (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    UINTN ModeNumber,
+    UINTN *Columns,
+    UINTN *Rows
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputSetMode (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    UINTN ModeNumber
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputSetAttribute (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    UINTN Attribute
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputClearScreen (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputSetCursorPosition (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    UINTN Column,
+    UINTN Row
+    );
+
+EFI_STATUS
+EFIAPI
+EfiSimpleTextOutputEnableCursor (
+    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    BOOLEAN Visible
+    );

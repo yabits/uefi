@@ -167,16 +167,31 @@ EFI_HANDLE EfiFirmwareImageHandle;
 // Define a template for the EFI services.
 //
 
+EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL EfiSimpleTextInputExProtocolTemplate = {
+    EfiSimpleTextInputExReset,
+    EfiSimpleTextInputExReadKeyStrokeEx,
+    NULL,
+    EfiSimpleTextInputExSetState,
+    EfiSimpleTextInputExRegisterKeyNotify,
+    EfiSimpleTextInputExUnregisterKeyNotify
+};
+
+EFI_SIMPLE_TEXT_INPUT_PROTOCOL EfiSimpleTextInputProtocolTemplate = {
+    EfiSimpleTextInputReset,
+    EfiSimpleTextInputReadKeyStroke,
+    NULL,
+};
+
 EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL EfiSimpleTextOutputProtocolTemplate = {
-    NULL,
-    EfiSimpleTextOutputString,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
+    EfiSimpleTextOutputReset,
+    EfiSimpleTextOutputOutputString,
+    EfiSimpleTextOutputTestString,
+    EfiSimpleTextOutputQueryMode,
+    EfiSimpleTextOutputSetMode,
+    EfiSimpleTextOutputSetAttribute,
+    EfiSimpleTextOutputClearScreen,
+    EfiSimpleTextOutputSetCursorPosition,
+    EfiSimpleTextOutputEnableCursor,
     NULL
 };
 
@@ -265,6 +280,9 @@ EFI_RUNTIME_SERVICES EfiRuntimeServicesTemplate = {
 //
 
 EFI_SYSTEM_TABLE *EfiSystemTable;
+EFI_HANDLE EfiConsoleInHandle;
+EFI_SIMPLE_TEXT_INPUT_PROTOCOL *EfiConIn = \
+                                &EfiSimpleTextInputProtocolTemplate;
 EFI_HANDLE EfiConsoleOutHandle;
 EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *EfiConOut = \
                                  &EfiSimpleTextOutputProtocolTemplate;
@@ -483,6 +501,7 @@ Return Value:
     EfiSystemTable->BootServices = EfiBootServices;
     EfiSystemTable->RuntimeServices = EfiRuntimeServices;
     EfiSystemTable->ConsoleOutHandle = EfiConsoleOutHandle;
+    EfiSystemTable->ConIn = EfiConIn;
     EfiSystemTable->ConOut = EfiConOut;
 
     //
