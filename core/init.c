@@ -286,6 +286,9 @@ EFI_SIMPLE_TEXT_INPUT_PROTOCOL *EfiConIn = \
 EFI_HANDLE EfiConsoleOutHandle;
 EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *EfiConOut = \
                                  &EfiSimpleTextOutputProtocolTemplate;
+EFI_HANDLE EfiStandardErrorHandle;
+EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *EfiStdErr = \
+                                &EfiSimpleTextOutputProtocolTemplate;
 EFI_BOOT_SERVICES *EfiBootServices = &EfiBootServicesTemplate;
 EFI_RUNTIME_SERVICES *EfiRuntimeServices = &EfiRuntimeServicesTemplate;
 
