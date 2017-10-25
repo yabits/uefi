@@ -167,8 +167,13 @@ typedef unsigned long long ULONGLONG, *PULONGLONG;
 #error INTN and UINTN definitions are wrong.
 #endif
 
+#if CONFIG_TARGET_I386
+typedef int INTN, *PINTN;
+typedef unsigned int UINTN, *PUINTN;
+#else
 typedef long INTN, *PINTN;
 typedef unsigned long UINTN, *PUINTN;
+#endif
 
 typedef unsigned long long PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;
 

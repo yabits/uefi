@@ -98,8 +98,13 @@ typedef char CHAR8;
 #error INTN and UINTN definitions are wrong.
 #endif
 
-typedef unsigned long UINTN;
-typedef long INTN;
+#if CONFIG_TARGET_I386
+typedef int INTN, *PINTN;
+typedef unsigned int UINTN, *PUINTN;
+#else
+typedef long INTN, *PINTN;
+typedef unsigned long UINTN, *PUINTN;
+#endif
 
 //
 // -------------------------------------------------------------------- Globals
