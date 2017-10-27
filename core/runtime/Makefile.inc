@@ -16,4 +16,4 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-y += core/runtime/runtime.o
+TARGETS-RUNTIME-y += core/runtime/runtime.o

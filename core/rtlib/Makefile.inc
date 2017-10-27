@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-y += core/rtlib/init.o core/rtlib/time.o
-TARGETS-y += core/rtlib/var.o
+TARGETS-RTLIB-y += core/rtlib/init.o core/rtlib/time.o
+TARGETS-RTLIB-y += core/rtlib/var.o
