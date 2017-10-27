@@ -185,9 +185,8 @@ $(obj)/%.o: $(src)/%.c
 
 $(obj)/%.S.o: $(src)/%.S
 	printf "  AS      $(subst $(shell pwd)/,,$(@))\n"
-	#WORKAROUND
-	$(CC) -E $(CPPFLAGS) $^ > $(obj)/tmp.S
-	AS=$(AS) $(LPAS) $(ASFLAGS) -o $@ $(obj)/tmp.S
+	$(CC) -E $(CPPFLAGS) $^ > $(patsubst %.S.o,%.S,$(@))
+	AS=$(AS) $(LPAS) $(ASFLAGS) -o $@ $(patsubst %.S.o,%.S,$(@))
 
 $(obj)/%.map: $(obj)/%
 	printf "  SYMS    $(subst $(shell pwd)/,,$(@))\n"
