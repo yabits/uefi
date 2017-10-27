@@ -16,6 +16,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-y += lib/fatlib/fat.o lib/fatlib/fatcache.o
-TARGETS-y += lib/fatlib/fatsup.o lib/fatlib/idtodir.o
+TARGETS-LIB-y += lib/fatlib/fat.o lib/fatlib/fatcache.o
+TARGETS-LIB-y += lib/fatlib/fatsup.o lib/fatlib/idtodir.o
 

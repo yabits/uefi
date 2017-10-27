@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-DEV-y += dev/ide/ide_new.o
+TARGETS-PLATRT-y += plat/cb/runtime/runtime.o plat/cb/runtime/reboot.o
 

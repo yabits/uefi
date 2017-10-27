@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-y += lib/basevid/textvid.o lib/basevid/fontdata.o
+TARGETS-LIB-y += lib/basevid/textvid.o lib/basevid/fontdata.o
 
