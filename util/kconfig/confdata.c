@@ -452,7 +452,7 @@ int conf_write(const char *name)
 
 	fprintf(out, _("#\n"
 		       "# Automatically generated make config: don't edit\n"
-		       "# FILO version: %s\n"
+		       "# UEFI version: %s\n"
 		       "%s%s"
 		       "#\n"),
 		     getenv("KERNELVERSION")?getenv("KERNELVERSION"):"",
@@ -707,13 +707,13 @@ int conf_write_autoconf(void)
 	time(&now);
 	fprintf(out, "#\n"
 		     "# Automatically generated make config: don't edit\n"
-		     "# FILO version: %s\n"
+		     "# UEFI version: %s\n"
 		     "# %s"
 		     "#\n",
 		     getenv("KERNELVERSION")?getenv("KERNELVERSION"):"", ctime(&now));
 	fprintf(out_h, "/*\n"
 		       " * Automatically generated C config: don't edit\n"
-		       " * FILO version: %s\n"
+		       " * UEFI version: %s\n"
 		       " * %s"
 		       " */\n"
 		       "#define AUTOCONF_INCLUDED\n",

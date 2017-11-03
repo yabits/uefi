@@ -25,7 +25,7 @@
 static const char mconf_readme[] = N_(
 "Overview\n"
 "--------\n"
-"Some features may be built directly into FILO.\n"
+"Some features may be built directly into UEFI.\n"
 "Some may be made into loadable runtime modules.  Some features\n"
 "may be completely removed altogether.  There are also certain\n"
 "parameters which are not really features, but must be\n"
@@ -367,7 +367,7 @@ static void set_config_filename(const char *config_filename)
 	sym = sym_lookup("KERNELVERSION", 0);
 	sym_calc_value(sym);
 	size = snprintf(menu_backtitle, sizeof(menu_backtitle),
-	                _("%s - FILO v%s Configuration"),
+	                _("%s - UEFI v%s Configuration"),
 		        config_filename, getenv("KERNELVERSION"));
 	if (size >= sizeof(menu_backtitle))
 		menu_backtitle[sizeof(menu_backtitle)-1] = '\0';
@@ -917,7 +917,7 @@ int main(int ac, char **av)
 		}
 	case -1:
 		printf(_("\n\n"
-			"*** End of FILO configuration.\n"
+			"*** End of UEFI configuration.\n"
 			"*** Execute 'make' to build or try 'make help'."
 			"\n\n"));
 		break;
