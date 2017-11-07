@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-DEV-y += dev/ahci/ahci.o
+TARGETS-y += dev/ahci/ahci.o
 

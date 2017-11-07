@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-LIB-y += lib/blockdev/list.o
+TARGETS-y += lib/blockdev/list.o
 

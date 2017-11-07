@@ -139,14 +139,8 @@ SUBDIRS-y += archlib core lib plat dev
 $(foreach subdir,$(SUBDIRS-y),$(eval include $(subdir)/Makefile.inc))
 
 TARGET := $(obj)/uefi.elf
-ARCHLIBOBJS := $(patsubst %,$(obj)/%,$(TARGETS-ARCHLIB-y))
-RTLIBOBJS := $(patsubst %,$(obj)/%,$(TARGETS-RTLIB-y))
-RUNTIMEOBJS := $(patsubst %,$(obj)/%,$(TARGETS-RUNTIME-y))
-COREOBJS := $(patsubst %,$(obj)/%,$(TARGETS-CORE-y))
-DEVOBJS := $(patsubst %,$(obj)/%,$(TARGETS-DEV-y))
-PLATOBJS := $(patsubst %,$(obj)/%,$(TARGETS-PLAT-y))
-PLATRTOBJS := $(patsubst %,$(obj)/%,$(TARGETS-PLATRT-y))
-LIBOBJS := $(patsubst %,$(obj)/%,$(TARGETS-LIB-y))
+OBJS := $(patsubst %,$(obj)/%,$(TARGETS-y))
+
 
 all: prepare $(TARGET)
 
@@ -165,52 +159,9 @@ $(LIBPAYLOAD): $(src)/$(LIB_CONFIG)
 	$(MAKE) -C $(LIBCONFIG_PATH) obj=$(obj)/libpayload-build DESTDIR=$(obj) install
 endif
 
-$(obj)/uefiarch.a: $(ARCHLIBOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(ARCHLIBOBJS)
-
-$(obj)/rtlib.a: $(RTLIBOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(RTLIBOBJS)
-
-$(obj)/rtbase.a: $(RUNTIMEOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(RUNTIMEOBJS)
-
-$(obj)/ueficore.a: $(COREOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(COREOBJS)
-
-$(obj)/uefidev.a: $(DEVOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(DEVOBJS)
-
-$(obj)/cbrt.a: $(PLATRTOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(PLATRTOBJS)
-
-$(obj)/rtllib.a: $(LIBOBJS)
-	printf "  AR      $(subst $(shell pwd)/,,$(@))\n"
-	$(AR) rcs $@ $(LIBOBJS)
-
-ARCHIVES := $(obj)/ueficore.a $(obj)/uefidev.a $(obj)/uefiarch.a
-ARCHIVES += $(obj)/rtlib.a $(obj)/rtbase.a $(obj)/cbrt.a $(obj)/rtllib.a
-
-# $(obj)/core/runtime/rtbase: $(RUNTIMEOBJS)
-# 	printf "  LD      $(subst $(shell pwd)/,,$(@))\n"
-# 	CC=$(CC) $(LPGCC) $(RUNTIMEOBJS) $(LIBS) -o $@
-#
-# $(obj)/plat/cb/runtime/cbrt: $(PLATRTOBJS)
-# 	printf "  LD      $(subst $(shell pwd)/,,$(@))\n"
-# 	CC=$(CC) $(LPGCC) $(PLATRTOBJS) $(LIBS) -o $@
-
-$(obj)/cbfw: $(LIBPAYLOAD) $(PLATOBJS) $(ARCHIVES)
+$(obj)/uefi: $(OBJS) $(LIBPAYLOAD)
 	printf "  LD      $(subst $(shell pwd)/,,$(@))\n"
-	CC=$(CC) $(LPGCC) $(LIBS) $(PLATOBJS) $(ARCHIVES) -o $@
-
-$(obj)/uefi: $(obj)/cbfw
-	printf "  MV      $(subst $(shell pwd)/,,$(@))\n"
-	mv $< $@
+	CC=$(CC) $(LPGCC) $(OBJS) $(LIBS) -o $@
 
 $(obj)/uefi.bzImage: $(TARGET) $(obj)/x86/linux_head.o
 	$(OBJCOPY) -O binary $(obj)/x86/linux_head.o $@.tmp1

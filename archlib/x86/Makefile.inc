@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-ARCHLIB-y += archlib/x86/archlib.o archlib/x86/regacces.o
-TARGETS-ARCHLIB-y += archlib/x86/archsup.S.o archlib/x86/ioport.S.o
+TARGETS-y += archlib/x86/archlib.o archlib/x86/regacces.o
+TARGETS-y += archlib/x86/archsup.S.o archlib/x86/ioport.S.o

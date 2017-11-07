@@ -16,4 +16,4 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-TARGETS-CORE-y += core/x86/archsup.S.o core/x86/prochw.o
+TARGETS-y += core/x86/archsup.S.o core/x86/prochw.o
