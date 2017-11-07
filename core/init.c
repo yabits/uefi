@@ -476,6 +476,9 @@ Return Value:
     EfiRuntimeServices =
                       EfiCoreAllocateRuntimePool(sizeof(EFI_RUNTIME_SERVICES));
 
+    EfiRuntimeProtocol->VirtualMode = FALSE;
+    EfiRuntimeProtocol->AtRuntime = FALSE;
+
     if (EfiRuntimeServices == NULL) {
         goto InitializeEnd;
     }
@@ -727,8 +730,6 @@ Return Value:
     EfiSystemTable->ConsoleOutHandle = NULL;
     EfiSystemTable->StdErr = NULL;
     EfiSystemTable->StandardErrorHandle = NULL;
-    EfiCoreCalculateTableCrc32(&(EfiSystemTable->Hdr));
-    EfiSetMem(EfiBootServices, sizeof(EFI_BOOT_SERVICES), 0);
     EfiBootServices = NULL;
     EfiRuntimeProtocol->AtRuntime = TRUE;
     return Status;

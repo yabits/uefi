@@ -54,15 +54,6 @@ EfiCoreConvertPointer (
     VOID **Address
     );
 
-EFIAPI
-EFI_STATUS
-EfiCoreSetVirtualAddressMap (
-    UINTN MemoryMapSize,
-    UINTN DescriptorSize,
-    UINT32 DescriptorVersion,
-    EFI_MEMORY_DESCRIPTOR *VirtualMap
-    );
-
 VOID
 EfipPeLoaderRelocateImageForRuntime (
     PHYSICAL_ADDRESS ImageBase,

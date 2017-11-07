@@ -211,7 +211,7 @@ Author:
 // Define EFI File location to boot from on removable media devices.
 //
 
-#define EFI_REMOVABLE_MEDIA_FILE_NAME_IA32    "\\EFI\\BOOT\\BOOTIA32.EFI"
+#define EFI_REMOVABLE_MEDIA_FILE_NAME_IA32    "\\efi\\boot\\bootia32.efi"
 #define EFI_REMOVABLE_MEDIA_FILE_NAME_IA64    "\\EFI\\BOOT\\BOOTIA64.EFI"
 #define EFI_REMOVABLE_MEDIA_FILE_NAME_X64     "\\EFI\\BOOT\\BOOTX64.EFI"
 #define EFI_REMOVABLE_MEDIA_FILE_NAME_ARM     "\\EFI\\BOOT\\BOOTARM.EFI"

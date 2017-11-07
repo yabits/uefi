@@ -181,3 +181,11 @@ Return Value:
 
 --*/
 
+EFIAPI
+EFI_STATUS
+EfiCoreSetVirtualAddressMap (
+    UINTN MemoryMapSize,
+    UINTN DescriptorSize,
+    UINT32 DescriptorVersion,
+    EFI_MEMORY_DESCRIPTOR *VirtualMap
+    );

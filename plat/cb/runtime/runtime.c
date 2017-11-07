@@ -200,7 +200,7 @@ Return Value:
 
 {
 
-    return EFI_UNSUPPORTED;
+    return EFI_SUCCESS;
 }
 
 VOID
