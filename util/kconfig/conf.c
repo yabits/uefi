@@ -563,7 +563,7 @@ int main(int ac, char **av)
 	case ask_silent:
 		if (stat(".config", &tmpstat)) {
 			printf(_("***\n"
-				"*** You have not yet configured UEFI!\n"
+				"*** You have not yet configured FILO!\n"
 				"*** (missing .config file)\n"
 				"***\n"
 				"*** Please run some configurator (e.g. \"make oldconfig\" or\n"
@@ -610,7 +610,7 @@ int main(int ac, char **av)
 	} else if (conf_get_changed()) {
 		name = getenv("KCONFIG_NOSILENTUPDATE");
 		if (name && *name) {
-			fprintf(stderr, _("\n*** UEFI configuration requires explicit update.\n\n"));
+			fprintf(stderr, _("\n*** FILO configuration requires explicit update.\n\n"));
 			return 1;
 		}
 	} else
