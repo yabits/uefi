@@ -84,28 +84,19 @@ include $(src)/.config
 $(if $(wildcard .xcompile),,$(shell bash util/xcompile/xcompile > .xcompile))
 include .xcompile
 
-ARCH-$(CONFIG_TARGET_I386) := x86_32
-ARCH-$(CONFIG_TARGET_ARM) := arm
+ARCH-$(CONFIG_TARGET_I386) := i386
+ARCH-$(CONFIG_TARGET_X64) := x86_64
 
-CC := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-gcc
-AS := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-as
-LD := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-ld
-NM := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-nm
-OBJCOPY := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-objcopy
-OBJDUMP := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-objdump
-READELF := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-readelf
-STRIP := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-strip
-AR := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin/i386-elf-ar
-
-# CC := $(CC_$(ARCH-y))
-# AS := $(AS_$(ARCH-y))
-# LD := $(LD_$(ARCH-y))
-# NM := $(NM_$(ARCH-y))
-# OBJCOPY := $(OBJCOPY_$(ARCH-y))
-# OBJDUMP := $(OBJDUMP_$(ARCH-y))
-# READELF := $(READELF_$(ARCH-y))
-# STRIP := $(STRIP_$(ARCH-y))
-# AR := $(AR_$(ARCH-y))
+XGCC := $(src)/../../../../../src/coreboot/util/crossgcc/xgcc/bin
+CC := $(XGCC)/$(ARCH-y)-elf-gcc
+AS := $(XGCC)/$(ARCH-y)-elf-as
+LD := $(XGCC)/$(ARCH-y)-elf-ld
+NM := $(XGCC)/$(ARCH-y)-elf-nm
+OBJCOPY := $(XGCC)/$(ARCH-y)-elf-objcopy
+OBJDUMP := $(XGCC)/$(ARCH-y)-elf-objdump
+READELF := $(XGCC)/$(ARCH-y)-elf-readelf
+STRIP := $(XGCC)/$(ARCH-y)-elf-strip
+AR := $(XGCC)/$(ARCH-y)-elf-ar
 
 CFLAGS += $(CFLAGS_$(ARCH-y))
 
@@ -120,7 +111,7 @@ LPGCC = $(LIBPAYLOAD_PREFIX)/bin/lpgcc
 LPAS = $(LIBPAYLOAD_PREFIX)/bin/lpas
 
 ARCHDIR-$(CONFIG_TARGET_I386) := x86
-ARCHDIR-$(CONFIG_TARGET_ARM) := arm
+ARCHDIR-$(CONFIG_TARGET_X64) := x86_64
 
 CPPFLAGS := -nostdinc -imacros $(obj)/config.h
 CPPFLAGS += -I$(INCPAYLOAD) -I$(INCPAYLOAD)/$(ARCHDIR-y)
