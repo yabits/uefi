@@ -1,6 +1,10 @@
 #include "ueficore.h"
 #include <libpayload.h>
-#include <stdio.h>
+#include <curses.h>
+
+#define KEY_ESC 27
+#define KEY_TAB '\t'
+#define ASCII_CHAR(x)   ((x) & 0xFF)
 
 EFI_STATUS
 EFIAPI
@@ -83,12 +87,74 @@ EfiSimpleTextInputReadKeyStroke (
         EFI_INPUT_KEY *Key
         )
 {
-    CHAR16 Char;
+    CHAR16 c;
 
-    Char = (CHAR16)getchar();
+    c = getchar();
 
-    Key->ScanCode = 0x00;
-    Key->UnicodeChar = Char;
+    if (c == KEY_TAB) {
+        Key->ScanCode = 0x00;
+        Key->UnicodeChar = '\t';
+        return EFI_SUCCESS;
+    }
+
+    if (c == KEY_ESC) {
+        Key->ScanCode = 0x17;
+        Key->UnicodeChar = 0x00;
+        return EFI_SUCCESS;
+    }
+
+    if (c == KEY_ENTER) {
+        Key->ScanCode = 0x00;
+        Key->UnicodeChar = '\n';
+        return EFI_SUCCESS;
+    }
+
+    if (c == KEY_BACKSPACE) {
+        Key->ScanCode = 0x00;
+        Key->UnicodeChar = 0x08;
+        return EFI_SUCCESS;
+    }
+
+    if (c == KEY_DC) {
+        Key->ScanCode = 0x08;
+        Key->UnicodeChar = 0x00;
+        return EFI_SUCCESS;
+    }
+
+    if (c >= KEY_F(1) && c <= KEY_F(10)) {
+        Key->ScanCode = (CHAR16)(0x0b + c - KEY_F(1));
+        Key->UnicodeChar = 0x00;
+        return EFI_SUCCESS;
+    }
+
+    Key->UnicodeChar = 0x00;
+    switch(c) {
+        case KEY_UP:
+            Key->ScanCode = 0x09;
+            break;
+        case KEY_DOWN:
+            Key->ScanCode = 0x0a;
+            break;
+        case KEY_DC:
+            Key->ScanCode = 0x08;
+            break;
+        case KEY_HOME:
+            Key->ScanCode = 0x05;
+            break;
+        case KEY_END:
+            Key->ScanCode = 0x06;
+            break;
+        default:
+            Key->ScanCode = 0x00;
+            Key->UnicodeChar = c;
+            break;
+    }
+
+    if (c == ERR) {
+        Key->ScanCode = 0x00;
+        Key->UnicodeChar = 0x00;
+        return EFI_SUCCESS;
+    }
 
     return EFI_SUCCESS;
 }

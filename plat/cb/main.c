@@ -197,6 +197,10 @@ Return Value:
     }
 
     //EfipPcatEnumerateVideo();
+
+    keyboard_init();
+    keyboard_set_layout("us");
+
     return EFI_SUCCESS;
 }
 
