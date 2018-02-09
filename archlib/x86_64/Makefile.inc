@@ -16,5 +16,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-include archlib/x86/Makefile.inc
-
+TARGETS-y += archlib/x86_64/archlib.o archlib/x86_64/regacces.o
+TARGETS-y += archlib/x86_64/archsup.S.o archlib/x86_64/ioport.S.o

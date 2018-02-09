@@ -11,7 +11,7 @@ choice
 config TARGET_I386
 	bool "x86"
 
-config TARGET_X86
+config TARGET_X64
 	bool "x64"
 
 endchoice
