@@ -1,5 +1,7 @@
 # yabits/uefi [![CircleCI](https://circleci.com/gh/yabits/uefi.svg?style=shield)](https://circleci.com/gh/yabits/uefi)
 
+> :warning: yabits/uefi is no longer maintained. This repository is archived.
+
 A minoca based UEFI coreboot payload (WIP)
 
 [yabits/uefi](https://github.com/yabits/uefi) is an UEFI coreboot payload.
